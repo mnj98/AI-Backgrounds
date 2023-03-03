@@ -9,13 +9,23 @@ import {RequestSendService} from "../request-send.service";
 export class GenBackgroundComponent {
 
 
-    image!: File
+    image
 
     constructor(private req_service: RequestSendService) {}
 
 
     onFileChanged(event: any){
-        this.image = event.target.files[0]
+        if(event.target.files
+            && event.target.files.length > 0
+            && event.target.files[0].type.includes('image')){
+            let file = new FileReader()
+            file.readAsDataURL(event.target.files[0])
+            file.onload = () => {
+                this.image = {as_file: file.result, original: event.target.files[0]}
+            }
+
+        }
+
 
     }
 

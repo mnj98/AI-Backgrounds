@@ -5,4 +5,7 @@
     type="file" (change)="onFileChanged($event)"
     #fileInput>
 <button (click)="fileInput.click()">Select File</button>
+
+<img *ngIf="image" class="images" [src]="image.as_file" style="width:500px"/>
+<p *ngIf="!image">No image selected.</p>
 <button (click)="onUpload()">Upload!</button>
