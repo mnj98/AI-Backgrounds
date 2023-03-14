@@ -5,7 +5,7 @@ downloaded_embedding/
 /tmp
 /out-tsc
 /bazel-out
-
+/templates
 # Node
 /node_modules
 npm-debug.log
