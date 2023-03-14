@@ -48,7 +48,7 @@ def load_learned_embed_in_clip(learned_embeds_path, text_encoder, tokenizer, tok
     text_encoder.get_input_embeddings().weight.data[token_id] = embeds
 
 
-repo_id_embeds = "sd-concepts-library/omlettehaai" #@param {type:"string"}
+repo_id_embeds = "sd-concepts-library/cookiesmore" #@param {type:"string"}
 
 
 embeds_url = "" #Add the URL or path to a learned_embeds.bin file in case you have one
@@ -100,7 +100,7 @@ pipe = StableDiffusionPipeline.from_pretrained(
     tokenizer=tokenizer,
 ).to('cuda')
 
-prompt = "a photo of \u003Ccookie-photo> inside a pretty french bakery" #@param {type:"string"}
+prompt = "a photo of <cookie-photo> inside a pretty french bakery" #@param {type:"string"}
 
 num_samples = 4 #@param {type:"number"}
 num_rows = 2 #@param {type:"number"}
