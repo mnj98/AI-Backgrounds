@@ -111,5 +111,6 @@ for _ in range(num_rows):
     all_images.extend(images)
 
 grid = image_grid(all_images, num_samples, num_rows)
+grid.save("output.jpg")
 print(grid)
 
