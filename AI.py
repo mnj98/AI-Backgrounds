@@ -1,4 +1,5 @@
-import os
+import os, cv2
+import numpy as np
 import torch
 
 import PIL
@@ -117,6 +118,7 @@ def run_ai(request_queue, results, results_lock, ready):
 
         grid = image_grid(all_images, num_samples, num_rows)
         #grid.save("output.jpg")
+        grid = cv2.cvtColor(np.array(grid), cv2.COLOR_RGB2BGR)
         print(type(grid))
 
         with results_lock:
