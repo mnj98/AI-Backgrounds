@@ -3,6 +3,7 @@ downloaded_embedding/
 # Compiled output
 __pycache__/
 /dist
+templates/
 /tmp
 /out-tsc
 /bazel-out
