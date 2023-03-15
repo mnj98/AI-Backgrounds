@@ -9,12 +9,21 @@ import {RequestSendService} from "../request-send.service";
 export class GenBackgroundComponent {
 
 
-    image
+    prompt
+    generated_images
 
     constructor(private req_service: RequestSendService) {}
 
 
-    onFileChanged(event: any){
+
+    clickPrompt(prompt: string){
+        this.req_service.sendReq(prompt).subscribe(result => {
+            this.generated_images = result.output
+            this.prompt = result.prompt
+            console.log(this.generated_images)
+        })
+    }
+    /*onFileChanged(event: any){
         if(event.target.files
             && event.target.files.length > 0
             && event.target.files[0].type.includes('image')){
@@ -32,5 +41,5 @@ export class GenBackgroundComponent {
     onUpload(){
         this.req_service.sendReq(this.image).subscribe(console.log)
 
-    }
+    }*/
 }

@@ -1,6 +1,5 @@
-<p>gen-background works!</p>
 
-<input
+<!--<input
     style="display: none"
     type="file" (change)="onFileChanged($event)"
     #fileInput>
@@ -8,4 +7,8 @@
 
 <img *ngIf="image" class="images" [src]="image.as_file" style="width:500px"/>
 <p *ngIf="!image">No image selected.</p>
-<button (click)="onUpload()">Upload!</button>
+<button (click)="onUpload()">Upload!</button> -->
+
+<p><input type="text" id="username" name="username" #username></p>
+<img *ngIf="generated_images" class="images" src="{{'data:image/jpg;base64,' + generated_images}}" style="width:500px"/>
+<button type="button" (click)="clickPrompt(username.value)">Input Prompt</button>
