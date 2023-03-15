@@ -108,8 +108,8 @@ def run_ai(request_queue, results, results_lock, ready):
         prompt = req['prompt']
         done_event = req['event']
         id = req['id']
-        num_samples = 4 #@param {type:"number"}
-        num_rows = 2 #@param {type:"number"}
+        num_samples = 1 #@param {type:"number"}
+        num_rows = 1 #@param {type:"number"}
 
         all_images = []
         for _ in range(num_rows):
@@ -118,7 +118,7 @@ def run_ai(request_queue, results, results_lock, ready):
 
         grid = image_grid(all_images, num_samples, num_rows)
         #grid.save("output.jpg")
-        grid = cv2.cvtColor(np.array(grid), cv2.COLOR_RGB2BGR)
+        grid = cv2.imencode('.jpg', cv2.cvtColor(np.array(grid), cv2.COLOR_RGB2BGR))[1]
         print(type(grid))
 
         with results_lock:
