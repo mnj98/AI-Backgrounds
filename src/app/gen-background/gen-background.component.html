@@ -8,7 +8,11 @@
 <img *ngIf="image" class="images" [src]="image.as_file" style="width:500px"/>
 <p *ngIf="!image">No image selected.</p>
 <button (click)="onUpload()">Upload!</button> -->
-
-<p><input type="text" id="username" name="username" #username></p>
+<p>{{model.name}}</p>
 <img *ngIf="generated_images" class="images" src="{{'data:image/jpg;base64,' + generated_images}}" style="width:500px"/>
-<button type="button" (click)="clickPrompt(username.value)">Input Prompt</button>
+<div>
+    <p><input (keyup.enter)="clickPrompt(prompt.value)" type="text" id="prompt" name="prompt" #prompt></p>
+    <button type="button" (click)="clickPrompt(prompt.value)">Input Prompt</button>
+</div>
+
+

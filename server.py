@@ -1,5 +1,5 @@
 from flask import Flask,render_template, request, send_file
-import os, json, cv2, base64, threading, queue, random
+import os, json, cv2, base64
 from flask_cors import CORS
 app = Flask(__name__, static_folder=os.getcwd() + '/dist/ai-backgrounds/', static_url_path='')
 
@@ -7,21 +7,9 @@ from AI import run_ai
 
 CORS(app)
 
-
-#events = queue.Queue()
-
-#for i in range 30:
-    #events.put(threading.Event())
-request_queue = queue.Queue()
-results = dict()
-results_lock = threading.Lock()
-
-ready = threading.Event()
-
-ai_thread = threading.Thread(target=run_ai, args=(request_queue, results, results_lock, ready,))
-ai_thread.start()
-ready.wait()
-
+#TODO: actually check models
+def supported_model(model):
+    return True
 
 
 
@@ -32,21 +20,12 @@ def root():
 
 @app.post('/generate')
 def gen():
-    for k in request.json.keys():
-        print(k)
-    #print(request.args.keys)
     prompt = request.json['prompt']
-    #output = cv2.imencode('.jpg', cv2.imread('src/assets/leaf.jpg'))[1]
-    done_event = threading.Event()
-    id = random.random()
-    request_queue.put({'id': id, 'prompt': prompt, 'event': done_event})
-    done_event.wait()
-    with results_lock:
-        res = results.pop(id)
-        del done_event
+    model = request.json['model']
 
+    if not supported_model(model): return ("Bad model", 404)
 
-    output = res['output']
+    output = run_ai(model, prompt)
 
     return {'prompt': prompt, 'output': base64.b64encode(output).decode()}#'{"prompt": "' + prompt + '"}'
 

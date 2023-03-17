@@ -48,29 +48,16 @@ def load_learned_embed_in_clip(learned_embeds_path, text_encoder, tokenizer, tok
     token_id = tokenizer.convert_tokens_to_ids(token)
     text_encoder.get_input_embeddings().weight.data[token_id] = embeds
 
-def run_ai(request_queue, results, results_lock, ready):
 
-    repo_id_embeds = "sd-concepts-library/cookiesmore" #@param {type:"string"}
+#TODO: implement for new models ... will not get called with current setup
+def fetch_embeds(model):
+    return './models/egg.model'
 
 
-    embeds_url = "" #Add the URL or path to a learned_embeds.bin file in case you have one
-    placeholder_token_string = "" #Add what is the token string in case you are uploading your own embed
-
-    downloaded_embedding_folder = "./downloaded_embedding"
-    if not os.path.exists(downloaded_embedding_folder):
-        os.mkdir(downloaded_embedding_folder)
-    if(not embeds_url):
-        embeds_path = hf_hub_download(repo_id=repo_id_embeds, filename="learned_embeds.bin")
-        token_path = hf_hub_download(repo_id=repo_id_embeds, filename="token_identifier.txt")
-        os.system("cp " + embeds_path + " " + downloaded_embedding_folder)
-        os.system("cp " + token_path + " " + downloaded_embedding_folder)
-        with open(f'{downloaded_embedding_folder}/token_identifier.txt', 'r') as file:
-            placeholder_token_string = file.read()
-    else:
-        os.system("wget -q -O " + downloaded_embedding_folder + "/learned_embeds.bin " + embeds_url)
-
-    learned_embeds_path = f"{downloaded_embedding_folder}/learned_embeds.bin"
-
+def setup_pipeline(model):
+    if (model + '.model') not in os.lstdir('./models'):
+        learned_embeds_path = fetch_embeds(model)
+    else: learned_embeds_path = f'./models/{model}.model'
 
     tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-large-patch14")
     model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14")
@@ -101,27 +88,26 @@ def run_ai(request_queue, results, results_lock, ready):
         text_encoder=text_encoder,
         tokenizer=tokenizer,
     ).to('cuda')
-    ready.set()
-    #prompt = "a photo of <cookie-photo> inside a pretty french bakery" #@param {type:"string"}
-    while 1:
-        req = request_queue.get()
-        prompt = req['prompt']
-        done_event = req['event']
-        id = req['id']
-        num_samples = 1 #@param {type:"number"}
-        num_rows = 1 #@param {type:"number"}
 
-        all_images = []
-        for _ in range(num_rows):
-            images = pipe(prompt, num_images_per_prompt=num_samples, num_inference_steps=100, guidance_scale=9.5).images
-            all_images.extend(images)
+    return pipe
 
-        grid = image_grid(all_images, num_samples, num_rows)
-        #grid.save("output.jpg")
-        grid = cv2.imencode('.jpg', cv2.cvtColor(np.array(grid), cv2.COLOR_RGB2BGR))[1]
-        print(type(grid))
 
-        with results_lock:
-            results[id] = {'prompt': prompt, 'output': grid}
-        done_event.set()
+
+
+
+def run_ai(model, prompt, shape=(1,1):
+    pipe = setup_pipeline(model)
+    num_samples = shape[0] #@param {type:"number"}
+    num_rows = shape[1] #@param {type:"number"}
+
+    all_images = []
+    for _ in range(num_rows):
+        images = pipe(prompt, num_images_per_prompt=num_samples, num_inference_steps=100, guidance_scale=9.5).images
+        all_images.extend(images)
+
+    grid = image_grid(all_images, num_samples, num_rows)
+    #grid.save("output.jpg")
+    grid = cv2.imencode('.jpg', cv2.cvtColor(np.array(grid), cv2.COLOR_RGB2BGR))[1]
+    return grid
+
 

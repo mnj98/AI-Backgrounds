@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RequestSendService} from "../request-send.service";
 
 @Component({
@@ -6,23 +6,27 @@ import {RequestSendService} from "../request-send.service";
   templateUrl: './gen-background.component.html',
   styleUrls: ['./gen-background.component.css']
 })
-export class GenBackgroundComponent {
+export class GenBackgroundComponent implements OnInit{
 
-
+    model
     prompt
     generated_images
 
     constructor(private req_service: RequestSendService) {}
 
-
+    ngOnInit(): void {
+        this.model = window.history.state.id ?? {name: 'Spinach Omelette', id: 'egg'}
+    }
 
     clickPrompt(prompt: string){
-        this.req_service.sendReq(prompt).subscribe(result => {
+        this.req_service.sendReq(prompt, this.model.id).subscribe(result => {
             this.generated_images = result.output
             this.prompt = result.prompt
             console.log(this.generated_images)
         })
     }
+
+
     /*onFileChanged(event: any){
         if(event.target.files
             && event.target.files.length > 0

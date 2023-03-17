@@ -1,3 +1,7 @@
 <p>Home</p>
 
-<app-gen-background></app-gen-background>
+<div>
+    <p>Select Food</p>
+    <button mat-button *ngFor="let model of simulated_model_database" (click)="selectModel(model.id)">{{model.name}}</button>
+
+</div>
