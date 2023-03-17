@@ -55,7 +55,7 @@ def fetch_embeds(model):
 
 
 def setup_pipeline(model):
-    if (model + '.model') not in os.lstdir('./models'):
+    if (model + '.model') not in os.listdir('./models'):
         learned_embeds_path = fetch_embeds(model)
     else: learned_embeds_path = f'./models/{model}.model'
 
@@ -95,7 +95,7 @@ def setup_pipeline(model):
 
 
 
-def run_ai(model, prompt, shape=(1,1):
+def run_ai(model, prompt, shape=(1,1)):
     pipe = setup_pipeline(model)
     num_samples = shape[0] #@param {type:"number"}
     num_rows = shape[1] #@param {type:"number"}

@@ -10,9 +10,9 @@ export class RequestSendService {
   constructor(private http: HttpClient) { }
 
     //TODO: actually implement
-    sendReq(req: any, model: any){
+    sendReq(prompt: any, model: any){
 
-      return this.http.post<any>("http://localhost:1234/generate", {prompt: req, model: model})
+      return this.http.post<any>("http://localhost:1234/generate", {prompt: prompt, model: model})
         /*return new Observable(observer => {
             observer.next(req ?? 'No image selected')
         })*/

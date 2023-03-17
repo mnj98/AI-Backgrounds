@@ -15,7 +15,7 @@ export class GenBackgroundComponent implements OnInit{
     constructor(private req_service: RequestSendService) {}
 
     ngOnInit(): void {
-        this.model = window.history.state.id ?? {name: 'Spinach Omelette', id: 'egg'}
+        this.model = window.history.state.model ?? {name: 'Spinach Omelette', id: 'egg'}
     }
 
     clickPrompt(prompt: string){

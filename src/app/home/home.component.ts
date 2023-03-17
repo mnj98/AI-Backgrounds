@@ -17,8 +17,8 @@ export class HomeComponent implements OnInit{
         this.simulated_model_database = [{name: 'Spinach Omelette', id: 'egg'}, {name: 'Smores Cookie', id: 'cookie'}]
     }
 
-    selectModel(id: string): void{
-        this.router.navigate(['/generate'], {state: {id: id}})
+    selectModel(model: any): void{
+        this.router.navigate(['/generate'], {state: {model: model}})
     }
 
 
