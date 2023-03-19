@@ -14,7 +14,8 @@ export class HomeComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        this.simulated_model_database = [{name: 'Spinach Omelette', id: 'egg'}, {name: 'Smores Cookie', id: 'cookie'}]
+        this.simulated_model_database = [{name: 'Spinach Omelette', id: 'egg', original_photo: 'assets/egg.jpg'},
+            {name: 'Smores Cookie', id: 'cookie', original_photo: 'assets/cookie.jpg'}]
     }
 
     selectModel(model: any): void{

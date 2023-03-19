@@ -1,7 +1,11 @@
 <p>Home</p>
 
-<div>
-    <p>Select Food</p>
-    <button mat-button *ngFor="let model of simulated_model_database" (click)="selectModel(model)">{{model.name}}</button>
+<div class="models">
+    <p>Select Foods</p>
+    <mat-card class="model" *ngFor="let model of simulated_model_database">
+        <div><img class="images" src="{{model.original_photo}}" style="width:100px"/></div>
+        <div><button mat-button  (click)="selectModel(model)">{{model.name}}</button></div>
+    </mat-card>
+
 
 </div>

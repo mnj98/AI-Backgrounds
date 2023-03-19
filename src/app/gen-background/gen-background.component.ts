@@ -15,15 +15,20 @@ export class GenBackgroundComponent implements OnInit{
     constructor(private req_service: RequestSendService) {}
 
     ngOnInit(): void {
-        this.model = window.history.state.model ?? {name: 'Spinach Omelette', id: 'egg'}
+        this.model = window.history.state.model ?? {name: 'Spinach Omelette', id: 'egg', original_photo: 'src/assets/egg.jpg'}
     }
 
     clickPrompt(prompt: string){
-        this.req_service.sendReq(prompt, this.model.id).subscribe(result => {
+        this.req_service.sendReq(prompt, this.model.id, '1234').subscribe({next: result => {
             this.generated_images = result.output
             this.prompt = result.prompt
-            console.log(this.generated_images)
-        })
+        }, error: error => {
+            console.log(error)
+            this.req_service.sendReq(prompt, this.model.id, '1235').subscribe({next: result => {
+                this.generated_images = result.output
+                this.prompt = result.prompt
+            }, error: console.log})
+        }})
     }
 
 

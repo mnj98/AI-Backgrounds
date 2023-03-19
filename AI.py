@@ -96,6 +96,7 @@ def setup_pipeline(model):
 
 
 def run_ai(model, prompt, shape=(1,1)):
+    print("AI")
     pipe = setup_pipeline(model)
     num_samples = shape[0] #@param {type:"number"}
     num_rows = shape[1] #@param {type:"number"}

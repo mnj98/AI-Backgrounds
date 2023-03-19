@@ -5,6 +5,7 @@ __pycache__/
 /dist
 models/
 templates/
+templates/index.html
 /tmp
 /out-tsc
 /bazel-out

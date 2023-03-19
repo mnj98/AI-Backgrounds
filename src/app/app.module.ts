@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { GenBackgroundComponent } from './gen-background/gen-background.component';
 import { HttpClientModule} from "@angular/common/http";
+import { MatCardModule } from "@angular/material/card";
+
 
 @NgModule({
   declarations: [
@@ -16,7 +18,8 @@ import { HttpClientModule} from "@angular/common/http";
   imports: [
     BrowserModule,
     AppRoutingModule,
-      HttpClientModule
+      HttpClientModule,
+      MatCardModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
