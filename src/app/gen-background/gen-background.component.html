@@ -10,10 +10,11 @@
 <button (click)="onUpload()">Upload!</button> -->
 <mat-card>
 <p>{{model.name}}</p>
-    <div><img class="images" src="{{model.original_photo}}" style="width:100px"/></div>
-<div *ngIf="generated_images">
+    <div><img class="images" src="{{'data:image/jpg;base64,' + model.thumbnail}}" style="width:100px"/></div>
+    <div *ngIf="generated_images && generated_images.length > 0"><p>Examples:</p><img *ngFor="let image of generated_images" class="images" src="{{'data:image/jpg;base64,' + image.image}}" style="width:100px"/></div>
+<div *ngIf="new_result">
     <p>Generated Image:</p>
-    <img  class="images" src="{{'data:image/jpg;base64,' + generated_images}}" style="width:200px"/></div>
+    <img  class="images" src="{{'data:image/jpg;base64,' + new_result}}" style="width:200px"/></div>
 <div>
     <p><input (keyup.enter)="clickPrompt(prompt.value)" type="text" id="prompt" name="prompt" #prompt></p>
     <button type="button" (click)="clickPrompt(prompt.value)">Input Prompt</button>

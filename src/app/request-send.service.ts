@@ -13,4 +13,12 @@ export class RequestSendService {
     sendReq(prompt: any, model: any, port: any){
         return this.http.post<any>("http://localhost:" + port + "/generate-background", {prompt: prompt, model: model})
     }
+
+    getTrainedModels(port: any){
+      return this.http.get<any>("http://localhost:" + port + "/get-trained-models")
+    }
+
+    getGeneratedImages(port: any, model_id:any){
+      return this.http.post<any>("http://localhost:" + port + "/get-generated-images", {model_id: model_id})
+    }
 }

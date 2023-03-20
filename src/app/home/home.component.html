@@ -2,8 +2,8 @@
 
 <div class="models">
     <p>Select Foods</p>
-    <mat-card class="model" *ngFor="let model of simulated_model_database">
-        <div><img class="images" src="{{model.original_photo}}" style="width:100px"/></div>
+    <mat-card class="model" *ngFor="let model of trained_models">
+        <div><img class="images" src="{{'data:image/jpg;base64,' + model.thumbnail}}" style="width:100px"/></div>
         <div><button mat-button  (click)="selectModel(model)">{{model.name}}</button></div>
     </mat-card>
 
