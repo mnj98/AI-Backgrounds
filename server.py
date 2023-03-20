@@ -32,7 +32,7 @@ def gen():
     if not supported_model(model): return ("Bad model", 404)
 
     output = cv2.imencode('.jpg', cv2.imread('./src/assets/cookie.jpg'))[1] if args.debug \
-        else run_ai(model, prompt, args.debug)
+        else run_ai(model, prompt)
 
     return {'prompt': prompt, 'output': base64.b64encode(output).decode()}
 
