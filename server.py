@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, send_file
 import os, json, cv2, base64, argparse, io
 from flask_cors import CORS
 from flask_mongoengine import MongoEngine
-from AI import run_ai
+#from AI import run_ai
 import numpy as np
 from PIL import Image
 import requests
@@ -77,16 +77,16 @@ def gtm():
 def gen():
     print('run_ai')
     prompt = request.json['prompt']
-    #model_id = request.json['model']
-    model_id = 'test'
+    model_id = request.json['model']
+    #model_id = 'test'
 
     if not supported_model(model_id): return ("Bad model", 404)
 
     output = cv2.imencode('.jpg', cv2.imread('./src/assets/cookie.jpg'))[1] if args.debug \
-        else requests.post('localhost:9999/generate-background', data={'model_id': model_id, 'prompt': prompt}).content.decode()
-    print(output)
+        else requests.post('http://localhost:9999/generate-background', json={'model_id': model_id, 'prompt': prompt}).content.decode()
+    #print(json.loads(output))
 
-    return {'prompt': prompt, 'output': base64.b64encode(output).decode()}
+    return {'prompt': prompt, 'output': json.loads(output)['output']}
 
 @app.post('/get-generated-images')
 def get_gen_images():
@@ -101,7 +101,7 @@ if __name__ == "__main__":
 
     #create and update new models manually
     #egg = Model(name='Smores Cookie', model_id='cookie', trained=True, thumbnail=base64.b64encode(cv2.imencode('.jpg', cv2.imread('src/assets/cookie.jpg'))[1]).decode())
-    #egg.embeds.put(open('cookie.model', 'rb'), content_type='application/octet-stream', filename='cookie.model')
+    #egg.embeds.put(open('models/cookie.model', 'rb'), content_type='application/octet-stream', filename='cookie.model')
     #egg.save()
 
     #egg = Model.objects().first()

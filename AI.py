@@ -1,19 +1,20 @@
 import os, cv2
 import numpy as np
-import torch
+import torch, base64
 
 from flask import Flask, render_template, request, send_file
-
+'''
 app = Flask(__name__)
 
 @app.post('/generate-background')
 def gen():
+    print(request.json)
     model_id = request.json['model_id']
     prompt = request.json['prompt']
     return {'output': run_ai(model_id, prompt)}
 
 app.run(port=9999)
-
+'''
 import PIL
 from huggingface_hub import hf_hub_download
 
@@ -115,12 +116,21 @@ def run_ai(model, prompt, shape=(1,1)):
 
     all_images = []
     for _ in range(num_rows):
-        images = pipe(prompt, num_images_per_prompt=num_samples, num_inference_steps=100, guidance_scale=9.5).images
+        images = pipe(prompt, num_images_per_prompt=num_samples, num_inference_steps=1, guidance_scale=9.5).images
         all_images.extend(images)
 
     grid = image_grid(all_images, num_samples, num_rows)
     #grid.save("output.jpg")
     grid = cv2.imencode('.jpg', cv2.cvtColor(np.array(grid), cv2.COLOR_RGB2BGR))[1]
-    return grid
+    return base64.b64encode(grid).decode()
+    #return grid
 
 
+app = Flask(__name__)
+@app.post('/generate-background')
+def gen():
+    print(request.json)
+    model_id = request.json['model_id']
+    prompt = request.json['prompt']
+    return {'output': run_ai(model_id, prompt)}
+app.run(port=9999)
