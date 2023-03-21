@@ -2,6 +2,18 @@ import os, cv2
 import numpy as np
 import torch
 
+from flask import Flask, render_template, request, send_file
+
+app = Flask(__name__)
+
+@app.post('/generate-background')
+def gen():
+    model_id = request.json['model_id']
+    prompt = request.json['prompt']
+    return {'output': run_ai(model_id, prompt)}
+
+app.run(port=9999)
+
 import PIL
 from huggingface_hub import hf_hub_download
 

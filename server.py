@@ -5,6 +5,7 @@ from flask_mongoengine import MongoEngine
 from AI import run_ai
 import numpy as np
 from PIL import Image
+import requests
 
 app = Flask(__name__, static_folder=os.getcwd() + '/dist/ai-backgrounds/', static_url_path='')
 
@@ -82,7 +83,8 @@ def gen():
     if not supported_model(model_id): return ("Bad model", 404)
 
     output = cv2.imencode('.jpg', cv2.imread('./src/assets/cookie.jpg'))[1] if args.debug \
-        else run_ai(model_id, prompt)
+        else requests.post('localhost:9999/generate-background', data={'model_id': model_id, 'prompt': prompt}).content.decode()
+    print(output)
 
     return {'prompt': prompt, 'output': base64.b64encode(output).decode()}
 
