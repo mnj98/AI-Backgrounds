@@ -21,4 +21,8 @@ export class RequestSendService {
     getGeneratedImages(port: any, model_id:any){
       return this.http.post<any>("http://localhost:" + port + "/get-generated-images", {model_id: model_id})
     }
+
+    saveImage(port: any, model_id:any, image:any, prompt: any, rating: any){
+      return this.http.post<any>("http://localhost:" + port + "/save-image", {model_id: model_id, image: image, prompt: prompt, rating: rating})
+    }
 }

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, send_file
-import os, json, cv2, base64, argparse, io
+import os, json, cv2, base64, argparse, io, random
 from flask_cors import CORS
 from flask_mongoengine import MongoEngine
 #from AI import run_ai
@@ -82,17 +82,29 @@ def gen():
 
     if not supported_model(model_id): return ("Bad model", 404)
 
-    output = cv2.imencode('.jpg', cv2.imread('./src/assets/cookie.jpg'))[1] if args.debug \
-        else requests.post('http://localhost:9999/generate-background', json={'model_id': model_id, 'prompt': prompt}).content.decode()
+    output = base64.b64encode(cv2.imencode('.jpg', cv2.imread('./src/assets/cookie.jpg'))[1]).decode() if args.debug \
+        else json.loads(requests.post('http://localhost:9999/generate-background',
+                                      json={'model_id': model_id, 'prompt': prompt}).content.decode())['output']
     #print(json.loads(output))
 
-    return {'prompt': prompt, 'output': json.loads(output)['output']}
+    return {'prompt': prompt, 'output': output}
 
 @app.post('/get-generated-images')
 def get_gen_images():
     model_id = request.json['model_id']
     model = Model.objects(model_id=model_id).first()
     return {'output': model.generated_images}
+
+@app.post('/save-image')
+def save_image():
+    model_id = request.json['model_id']
+    image = request.json['image']
+    prompt = request.json['prompt']
+    rating = request.json['rating']
+
+    model = Model.objects(model_id=model_id).first()
+    model.update(add_to_set__generated_images=[{'image_id': str(random.random()), 'image': image, 'prompt': prompt, 'rating': rating}])
+    return 'ok!'
 
 
 if __name__ == "__main__":

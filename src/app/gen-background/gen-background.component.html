@@ -1,4 +1,3 @@
-
 <!--<input
     style="display: none"
     type="file" (change)="onFileChanged($event)"
@@ -9,15 +8,31 @@
 <p *ngIf="!image">No image selected.</p>
 <button (click)="onUpload()">Upload!</button> -->
 <mat-card>
-<p>{{model.name}}</p>
-    <div><img class="images" src="{{'data:image/jpg;base64,' + model.thumbnail}}" style="width:100px"/></div>
+<p>
+    {{model.name}}
+</p>
+
+
+    <div>
+        <img class="images" src="{{'data:image/jpg;base64,' + model.thumbnail}}" style="width:100px"/>
+    </div>
     <div *ngIf="generated_images && generated_images.length > 0"><p>Examples:</p><img *ngFor="let image of generated_images" class="images" src="{{'data:image/jpg;base64,' + image.image}}" style="width:100px"/></div>
-<div *ngIf="new_result">
+
+
+    <div *ngIf="new_result">
     <p>Generated Image:</p>
-    <img  class="images" src="{{'data:image/jpg;base64,' + new_result}}" style="width:200px"/></div>
+    <div><img  class="images" src="{{'data:image/jpg;base64,' + new_result}}" style="width:200px"/></div>
+        <div><button mat-icon-button *ngFor="let ratingId of rating_nums;index as i" [id]="'star_'+i" (click)="onRate(i+1)" [matTooltip]="ratingId+''" matTooltipPosition="above">
+            <mat-icon>{{showIcon(i)}}</mat-icon>
+        </button></div>
+        <div><button mat-raised-button color="primary" (click)="saveImage(new_result, prompt, rating)">Save Image</button> </div>
+    </div>
+
+
+
 <div>
     <p><input (keyup.enter)="clickPrompt(prompt.value)" type="text" id="prompt" name="prompt" #prompt></p>
-    <button type="button" (click)="clickPrompt(prompt.value)">Input Prompt</button>
+    <button mat-button (click)="clickPrompt(prompt.value)">Input Prompt</button>
 </div>
 
 </mat-card>

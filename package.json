@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "deploy": "sh deploy_server.sh",
-      "debug": "sh deploy_server.sh -d"
+    "debug": "sh deploy_server.sh -d"
   },
   "private": true,
   "dependencies": {

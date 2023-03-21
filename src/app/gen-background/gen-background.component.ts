@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {RequestSendService} from "../request-send.service";
+import {LegacyThemePalette} from "@angular/material/legacy-core";
 
 @Component({
   selector: 'app-gen-background',
@@ -12,17 +13,39 @@ export class GenBackgroundComponent implements OnInit{
     prompt
     generated_images
     new_result
+    color = 'accent'
+    rating
+
+    rating_nums = [1,2,3,4,5]
 
     constructor(private req_service: RequestSendService) {}
 
     ngOnInit(): void {
+        this.rating = null
         this.model = window.history.state.model ?? {name: 'Spinach Omelette', id: 'egg', original_photo: 'src/assets/egg.jpg'}
-        this.req_service.getGeneratedImages('1234', this.model.model_id).subscribe({next: result => {
+        this.getGenedImages(this.model.model_id)
+    }
+
+    getGenedImages(model_id){
+        this.req_service.getGeneratedImages('1234', model_id).subscribe({next: result => {
                 this.generated_images = result.output
             }, error: error => {
                 console.log(error)
-                this.req_service.getGeneratedImages('1235', this.model.model_id).subscribe({next: result => {
+                this.req_service.getGeneratedImages('1235', model_id).subscribe({next: result => {
                         this.generated_images = result.output
+                    }, error: console.log})
+            }})
+    }
+
+    saveImage(image, prompt, rating){
+        if(!rating) rating = 0
+        this.req_service.saveImage('1234', this.model.model_id, image, prompt, rating).subscribe({next: result => {
+                this.getGenedImages(this.model.model_id)
+            }
+            , error: error => {
+                console.log(error)
+                this.req_service.saveImage('1235', this.model.model_id, image, prompt, rating).subscribe({next: result => {
+                        this.getGenedImages(this.model.model_id)
                     }, error: console.log})
             }})
     }
@@ -38,6 +61,22 @@ export class GenBackgroundComponent implements OnInit{
                 this.prompt = result.prompt
             }, error: console.log})
         }})
+    }
+
+
+    showIcon(index:number) {
+        if(this.rating == null) return 'star_border'
+        if (this.rating >= index + 1) {
+            return 'star';
+        } else {
+            return 'star_border';
+        }
+    }
+
+    onRate(rating:number){
+        console.log(rating)
+        if(this.rating != null && this.rating == rating) this.rating = null
+        else this.rating = rating
     }
 
 
