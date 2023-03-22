@@ -108,7 +108,7 @@ def setup_pipeline(model):
 
 
 
-def run_ai(model, prompt, num_samples=1, steps=100):
+def run_ai(model, prompt_text, num_samples=1, steps=100):
     print("AI")
     pipe = setup_pipeline(model)
 
@@ -117,7 +117,7 @@ def run_ai(model, prompt, num_samples=1, steps=100):
 
     all_images = []
     #for _ in range(num_rows):
-    images = pipe(prompt, num_images_per_prompt=num_samples, num_inference_steps=steps, guidance_scale=9.5).images
+    images = pipe(prompt_text, num_images_per_prompt=num_samples, num_inference_steps=steps, guidance_scale=9.5).images
     all_images.extend(images)
 
     #grid = image_grid(all_images, num_samples, num_rows)
@@ -132,8 +132,8 @@ app = Flask(__name__)
 def gen():
     print(request.json)
     model_id = request.json['model_id']
-    prompt = request.json['prompt']
+    prompt_text = request.json['prompt_text']
     num_samples = request.json['num_samples']
     steps = request.json['steps']
-    return {'images': run_ai(model_id, prompt, num_samples=num_samples, steps=steps)}
+    return {'images': run_ai(model_id, prompt_text, num_samples=num_samples, steps=steps)}
 app.run(port=9999)
