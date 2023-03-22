@@ -16,6 +16,42 @@
         <img mat-card-avatar class="images" src="{{'data:image/jpg;base64,' + model.thumbnail}}" style="width: 40px"/>
 
     </mat-card-header>
+    <mat-card-content>
+    <div>
+    <p>Input New Prompt:</p>
+        <input type="text" [(ngModel)]="prompt_text" (keydown.enter)="clickPrompt(prompt_text,num_samples,steps)">
+        <div *ngFor="let num of sample_nums;index as i" style="display: inline-block">
+        <button mat-flat-button color="primary" *ngIf="count_button_highlight(i)" (click)="onSelectNumSamples(i)">{{sample_nums[i]}} Samples</button>
+        <button mat-stroked-button color="primary" *ngIf="!count_button_highlight(i)" (click)="onSelectNumSamples(i)">{{sample_nums[i]}} Samples</button>
+    </div>
+        <div>
+            <mat-slider min="25" max="150" step="5" discrete showTickMarks>
+                <input matSliderThumb [(ngModel)]="steps">
+            </mat-slider>
+            <p>{{steps + ' steps'}}</p>
+        </div>
+    <div>
+    <button mat-stroked-button (click)="clickPrompt(prompt_text,num_samples,steps)">Input Prompt</button>
+    <button mat-stroked-button (click)="clear()">Clear</button>
+    </div>
+    </div>
+
+        <div *ngIf="new_results && new_results.length > 0">
+            <p>Generated Images:</p>
+            <div *ngFor="let new_result of new_results; index as i"><div><img  class="images" src="{{'data:image/jpg;base64,' + new_result.image}}" style="width:200px"/></div>
+                <mat-checkbox (change)="change_generated_image_selection(i)" ></mat-checkbox>
+                <div><button mat-icon-button *ngFor="let ratingId of rating_nums;index as j" [id]="'star_'+j" (click)="onRate(j+1, i)" [matTooltip]="ratingId+''" matTooltipPosition="above">
+                    <mat-icon>{{showIcon(j, i)}}</mat-icon>
+                </button></div>
+            </div>
+
+            <div>
+                <button *ngIf="any_selected()" mat-raised-button color="primary" (click)="saveImages()">Save Selected Images</button>
+                <button *ngIf="!any_selected()" mat-raised-button color="primary" disabled>Save Selected Images</button>
+            </div>
+        </div>
+
+
     <div *ngIf="generated_images && generated_images.length > 0"><p>Examples:</p>
         <mat-card *ngFor="let image of generated_images" style="width: 200px">
 
@@ -23,10 +59,13 @@
             <div>
                 <mat-card-footer>
                     <p>Prompt: {{image.prompt_text}}</p>
-                    <div><p style="display: inline-block;">Rating: {{image.rating}}<mat-icon>star</mat-icon></p>
-                    <button style="display: inline-block" mat-icon-button (click)="deleteImage(model.model_id, image.image_id)">
+                    <div><p style="display: inline-block;">Rating: {{image.rating}}<mat-icon>star</mat-icon></p></div>
+                    <div>
+                        <p>Number of Steps: {{image.steps}}</p>
+                        <button style="display: inline-block" mat-icon-button (click)="deleteImage(model.model_id, image.image_id)">
                         <mat-icon>delete</mat-icon>
-                    </button></div>
+                    </button>
+                    </div>
                 </mat-card-footer>
                 <mat-card-actions>
 
@@ -35,26 +74,12 @@
         </mat-card>
     </div>
 
-    <mat-card-content>
-    <div *ngIf="new_result">
-    <p>Generated Image:</p>
-    <div><img  class="images" src="{{'data:image/jpg;base64,' + new_result}}" style="width:200px"/></div>
-        <div><button mat-icon-button *ngFor="let ratingId of rating_nums;index as i" [id]="'star_'+i" (click)="onRate(i+1)" [matTooltip]="ratingId+''" matTooltipPosition="above">
-            <mat-icon>{{showIcon(i)}}</mat-icon>
-        </button></div>
-        <div><button mat-raised-button color="primary" (click)="saveImage(new_result, prompt_text, rating)">Save Image</button> </div>
-    </div>
 
 
 
-<div>
-    <p>Input New Prompt:
-        <input type="text" [(ngModel)]="prompt_text" (keydown.enter)="clickPrompt(prompt_text)">
-        <!--<input (keyup.enter)="clickPrompt(prompt.value)" type="text" id="prompt" name="prompt" #prompt>-->
-    </p>
-    <button mat-button (click)="clickPrompt(prompt_text)">Input Prompt</button>
-    <button mat-button (click)="clear()">Clear</button>
-</div>
+
+
+
     </mat-card-content>
 
 </mat-card>

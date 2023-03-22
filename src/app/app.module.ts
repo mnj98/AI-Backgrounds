@@ -11,6 +11,9 @@ import { MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {FormsModule} from "@angular/forms";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatSliderModule} from "@angular/material/slider";
+
 
 
 @NgModule({
@@ -28,6 +31,8 @@ import {FormsModule} from "@angular/forms";
         MatButtonModule,
         MatTooltipModule,
         FormsModule,
+        MatCheckboxModule,
+        MatSliderModule
     ],
   providers: [],
   bootstrap: [AppComponent]

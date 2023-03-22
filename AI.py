@@ -108,21 +108,22 @@ def setup_pipeline(model):
 
 
 
-def run_ai(model, prompt, shape=(1,1)):
+def run_ai(model, prompt, num_samples=1, steps=100):
     print("AI")
     pipe = setup_pipeline(model)
-    num_samples = shape[0] #@param {type:"number"}
-    num_rows = shape[1] #@param {type:"number"}
+
+    #num_samples = shape[0] #@param {type:"number"}
+    #num_rows = shape[1] #@param {type:"number"}
 
     all_images = []
-    for _ in range(num_rows):
-        images = pipe(prompt, num_images_per_prompt=num_samples, num_inference_steps=1, guidance_scale=9.5).images
-        all_images.extend(images)
+    #for _ in range(num_rows):
+    images = pipe(prompt, num_images_per_prompt=num_samples, num_inference_steps=steps, guidance_scale=9.5).images
+    all_images.extend(images)
 
-    grid = image_grid(all_images, num_samples, num_rows)
+    #grid = image_grid(all_images, num_samples, num_rows)
     #grid.save("output.jpg")
-    grid = cv2.imencode('.jpg', cv2.cvtColor(np.array(grid), cv2.COLOR_RGB2BGR))[1]
-    return base64.b64encode(grid).decode()
+    images = list(map(lambda image: cv2.imencode('.jpg', cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))[1], all_images))
+    return list(map(lambda image: base64.b64encode(image).decode(), images))
     #return grid
 
 
@@ -132,5 +133,7 @@ def gen():
     print(request.json)
     model_id = request.json['model_id']
     prompt = request.json['prompt']
-    return {'output': run_ai(model_id, prompt)}
+    num_samples = request.json['num_samples']
+    steps = request.json['steps']
+    return {'images': run_ai(model_id, prompt, num_samples=num_samples, steps=steps)}
 app.run(port=9999)
