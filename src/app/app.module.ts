@@ -10,6 +10,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {FormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
         MatCardModule,
         MatIconModule,
         MatButtonModule,
-        MatTooltipModule
+        MatTooltipModule,
+        FormsModule,
     ],
   providers: [],
   bootstrap: [AppComponent]

@@ -5,7 +5,8 @@ import {HomeComponent} from "./home/home.component";
 import {GenBackgroundComponent} from "./gen-background/gen-background.component";
 
 const routes: Routes = [{path: '', component: HomeComponent},
-    {path: 'generate', component: GenBackgroundComponent}];
+    {path: 'generate', component: GenBackgroundComponent},
+    { path: '**', redirectTo: '' }];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

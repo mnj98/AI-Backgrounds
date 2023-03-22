@@ -10,7 +10,7 @@ import {LegacyThemePalette} from "@angular/material/legacy-core";
 export class GenBackgroundComponent implements OnInit{
 
     model
-    prompt
+    prompt_text
     generated_images
     new_result
     color = 'accent'
@@ -26,12 +26,24 @@ export class GenBackgroundComponent implements OnInit{
         this.getGenedImages(this.model.model_id)
     }
 
+    deleteImage(model_id, image_id){
+        this.req_service.deleteImage('1234', model_id, image_id).subscribe({next: result => {
+                this.getGenedImages(model_id)
+            }, error: error => {
+                console.log(error)
+                this.req_service.deleteImage('1235', model_id, image_id).subscribe({next: result => {
+                        this.getGenedImages(model_id)
+                    }, error: console.log})
+            }})
+    }
+
     getGenedImages(model_id){
         this.req_service.getGeneratedImages('1234', model_id).subscribe({next: result => {
                 this.generated_images = result.output
             }, error: error => {
                 console.log(error)
                 this.req_service.getGeneratedImages('1235', model_id).subscribe({next: result => {
+                    console.log(result.output)
                         this.generated_images = result.output
                     }, error: console.log})
             }})
@@ -41,28 +53,43 @@ export class GenBackgroundComponent implements OnInit{
         if(!rating) rating = 0
         this.req_service.saveImage('1234', this.model.model_id, image, prompt, rating).subscribe({next: result => {
                 this.getGenedImages(this.model.model_id)
+                this.clear()
             }
             , error: error => {
                 console.log(error)
                 this.req_service.saveImage('1235', this.model.model_id, image, prompt, rating).subscribe({next: result => {
                         this.getGenedImages(this.model.model_id)
+                        this.clear()
                     }, error: console.log})
             }})
     }
 
     clickPrompt(prompt: string){
-        this.req_service.sendReq(prompt, this.model.model_id, '1234').subscribe({next: result => {
-            this.new_result = result.output
-            this.prompt = result.prompt
-        }, error: error => {
-            console.log(error)
-            this.req_service.sendReq(prompt, this.model.model_id, '1235').subscribe({next: result => {
-                this.new_result = result.output
-                this.prompt = result.prompt
-            }, error: console.log})
-        }})
+        if(!prompt || prompt.length == 0){
+            this.clear()
+        }
+        else {
+            this.req_service.sendReq(prompt, this.model.model_id, '1234').subscribe({
+                next: result => {
+                    this.new_result = result.output
+                    this.prompt_text = result.prompt_text
+                }, error: error => {
+                    console.log(error)
+                    this.req_service.sendReq(prompt, this.model.model_id, '1235').subscribe({
+                        next: result => {
+                            this.new_result = result.output
+                            this.prompt_text = result.prompt_text
+                        }, error: console.log
+                    })
+                }
+            })
+        }
     }
+    clear(){
+        this.new_result = null
+        this.prompt_text = ''
 
+    }
 
     showIcon(index:number) {
         if(this.rating == null) return 'star_border'

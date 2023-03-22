@@ -58,6 +58,10 @@ def supported_model(model_id):
 def root():
     return render_template('index.html')
 
+@app.route('/generate', methods=['GET'])
+def gen_fallback():
+    return render_template('index.html')
+
 def map_images(image):
     return base64.b64encode(cv2.imencode('.jpg', cv2.imdecode(np.frombuffer(image.read(), np.uint8), cv2.IMREAD_COLOR))[1]).decode()
 
@@ -76,7 +80,7 @@ def gtm():
 @app.post('/generate-background')
 def gen():
     print('run_ai')
-    prompt = request.json['prompt']
+    prompt_text = request.json['prompt_text']
     model_id = request.json['model']
     #model_id = 'test'
 
@@ -84,10 +88,10 @@ def gen():
 
     output = base64.b64encode(cv2.imencode('.jpg', cv2.imread('./src/assets/cookie.jpg'))[1]).decode() if args.debug \
         else json.loads(requests.post('http://localhost:9999/generate-background',
-                                      json={'model_id': model_id, 'prompt': prompt}).content.decode())['output']
+                                      json={'model_id': model_id, 'prompt_text': prompt_text}).content.decode())['output']
     #print(json.loads(output))
 
-    return {'prompt': prompt, 'output': output}
+    return {'prompt_text': prompt_text, 'output': output}
 
 @app.post('/get-generated-images')
 def get_gen_images():
@@ -99,12 +103,22 @@ def get_gen_images():
 def save_image():
     model_id = request.json['model_id']
     image = request.json['image']
-    prompt = request.json['prompt']
+    prompt_text = request.json['prompt_text']
     rating = request.json['rating']
 
     model = Model.objects(model_id=model_id).first()
-    model.update(add_to_set__generated_images=[{'image_id': str(random.random()), 'image': image, 'prompt': prompt, 'rating': rating}])
-    return 'ok!'
+    model.update(add_to_set__generated_images=[{'image_id': str(random.random()), 'image': image, 'prompt_text': prompt_text, 'rating': rating}])
+    return {"msg":'ok!'}
+
+@app.post('/delete-image')
+def del_image():
+    model = Model.objects(model_id=request.json['model_id']).first()
+    for i, image in enumerate(model.generated_images):
+        if image['image_id'] == request.json['image_id']:
+            del model.generated_images[i]
+            break
+    model.save()
+    return {'msg': "deleted :)"}
 
 
 if __name__ == "__main__":

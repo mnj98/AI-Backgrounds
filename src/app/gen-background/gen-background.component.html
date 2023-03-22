@@ -8,31 +8,53 @@
 <p *ngIf="!image">No image selected.</p>
 <button (click)="onUpload()">Upload!</button> -->
 <mat-card>
-<p>
-    {{model.name}}
-</p>
+    <mat-card-header>
+        <mat-card-title>{{model.name}}</mat-card-title>
 
 
-    <div>
-        <img class="images" src="{{'data:image/jpg;base64,' + model.thumbnail}}" style="width:100px"/>
+
+        <img mat-card-avatar class="images" src="{{'data:image/jpg;base64,' + model.thumbnail}}" style="width: 40px"/>
+
+    </mat-card-header>
+    <div *ngIf="generated_images && generated_images.length > 0"><p>Examples:</p>
+        <mat-card *ngFor="let image of generated_images" style="width: 200px">
+
+            <img mat-card-image class="images" src="{{'data:image/jpg;base64,' + image.image}}"/>
+            <div>
+                <mat-card-footer>
+                    <p>Prompt: {{image.prompt_text}}</p>
+                    <div><p style="display: inline-block;">Rating: {{image.rating}}<mat-icon>star</mat-icon></p>
+                    <button style="display: inline-block" mat-icon-button (click)="deleteImage(model.model_id, image.image_id)">
+                        <mat-icon>delete</mat-icon>
+                    </button></div>
+                </mat-card-footer>
+                <mat-card-actions>
+
+                </mat-card-actions>
+            </div>
+        </mat-card>
     </div>
-    <div *ngIf="generated_images && generated_images.length > 0"><p>Examples:</p><img *ngFor="let image of generated_images" class="images" src="{{'data:image/jpg;base64,' + image.image}}" style="width:100px"/></div>
 
-
+    <mat-card-content>
     <div *ngIf="new_result">
     <p>Generated Image:</p>
     <div><img  class="images" src="{{'data:image/jpg;base64,' + new_result}}" style="width:200px"/></div>
         <div><button mat-icon-button *ngFor="let ratingId of rating_nums;index as i" [id]="'star_'+i" (click)="onRate(i+1)" [matTooltip]="ratingId+''" matTooltipPosition="above">
             <mat-icon>{{showIcon(i)}}</mat-icon>
         </button></div>
-        <div><button mat-raised-button color="primary" (click)="saveImage(new_result, prompt, rating)">Save Image</button> </div>
+        <div><button mat-raised-button color="primary" (click)="saveImage(new_result, prompt_text, rating)">Save Image</button> </div>
     </div>
 
 
 
 <div>
-    <p><input (keyup.enter)="clickPrompt(prompt.value)" type="text" id="prompt" name="prompt" #prompt></p>
-    <button mat-button (click)="clickPrompt(prompt.value)">Input Prompt</button>
+    <p>Input New Prompt:
+        <input type="text" [(ngModel)]="prompt_text" (keydown.enter)="clickPrompt(prompt_text)">
+        <!--<input (keyup.enter)="clickPrompt(prompt.value)" type="text" id="prompt" name="prompt" #prompt>-->
+    </p>
+    <button mat-button (click)="clickPrompt(prompt_text)">Input Prompt</button>
+    <button mat-button (click)="clear()">Clear</button>
 </div>
+    </mat-card-content>
 
 </mat-card>
