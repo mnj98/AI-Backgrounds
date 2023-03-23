@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
+import {environment} from "../environments/environment";
 
-const url:string = "http://ai-backgrounds.ddns.net"
+const url:string = environment.backend_url//"http://ai-backgrounds.ddns.net"
 
 @Injectable({
   providedIn: 'root'

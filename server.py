@@ -43,7 +43,9 @@ CORS(app)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-d', '--debug', action='store_true')
-parser.add_argument('-g', '--gpu-host', required=True, action='store')
+parser.add_argument('-g', '--gpu-host', action='store')
+parser.add_argument('-p', '--port', required=True, action='store', type=int)
+parser.add_argument('-b', '--host', required=True, action='store')
 args = parser.parse_args()
 print("go")
 
@@ -156,4 +158,4 @@ if __name__ == "__main__":
     #egg = Model.objects().first()
     #egg.update(add_to_set__generated_images=[{'image_id':'egg1', 'image': base64.b64encode(cv2.imencode('.jpg', cv2.imread('src/assets/cookie.jpg'))[1]).decode()}])
 
-    app.run(port=1235 if args.debug else 80, host='localhost' if args.debug else '192.168.0.20')
+    app.run(port=args.port, host=args.host)
