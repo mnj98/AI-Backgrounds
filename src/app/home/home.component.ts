@@ -10,22 +10,21 @@ import {RequestSendService} from "../request-send.service";
 export class HomeComponent implements OnInit{
 
     trained_models
-    simulated_model_database
+    loaded_models = false
 
     constructor(private router: Router,
                 private req_service: RequestSendService) {
     }
 
     ngOnInit(): void {
-        this.simulated_model_database = []
         this.req_service.getTrainedModels('1234').subscribe({next: models => {
             this.trained_models = models.models
-            //console.log(this.trained_models)
+                this.loaded_models = true
         }, error: err => {
             console.log('debug??')
             this.req_service.getTrainedModels('1235').subscribe({next: models => {
                 this.trained_models = models.models
-                    //console.log('models: ' + this.trained_models[0].thumbnail)
+                    this.loaded_models = true
                 }, error: err1 => {
                 console.log(err1)
                 }})

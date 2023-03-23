@@ -13,7 +13,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {FormsModule} from "@angular/forms";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatSliderModule} from "@angular/material/slider";
-
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 
 @NgModule({
@@ -32,7 +32,8 @@ import {MatSliderModule} from "@angular/material/slider";
         MatTooltipModule,
         FormsModule,
         MatCheckboxModule,
-        MatSliderModule
+        MatSliderModule,
+        MatProgressBarModule
     ],
   providers: [],
   bootstrap: [AppComponent]

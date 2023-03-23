@@ -33,6 +33,10 @@
     <div>
     <button mat-stroked-button (click)="clickPrompt(prompt_text,num_samples,steps)">Input Prompt</button>
     <button mat-stroked-button (click)="clear()">Clear</button>
+        <div *ngIf="status_pending">
+            <p>Awaiting Response</p>
+            <mat-progress-bar color="accent", mode="indeterminate"></mat-progress-bar>
+        </div>
     </div>
     </div>
 

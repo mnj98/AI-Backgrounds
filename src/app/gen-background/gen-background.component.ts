@@ -5,6 +5,7 @@ import {LegacyThemePalette} from "@angular/material/legacy-core";
 const defaut_steps: number = 75
 const defaut_samples: number = 1
 
+
 @Component({
   selector: 'app-gen-background',
   templateUrl: './gen-background.component.html',
@@ -20,6 +21,7 @@ export class GenBackgroundComponent implements OnInit{
     //rating
     num_samples
     steps
+    status_pending = false
 
 
     rating_nums = [1,2,3,4,5]
@@ -108,6 +110,7 @@ export class GenBackgroundComponent implements OnInit{
             this.clear()
         }
         else {
+            this.status_pending = true
             console.log(steps)
             this.req_service.genImages(prompt, this.model.model_id, '1234', num_samples, steps).subscribe({
                 next: result => {
@@ -115,6 +118,9 @@ export class GenBackgroundComponent implements OnInit{
                         return {image: image, rating: 0, selected: false, steps: result.steps}
                     })
                     this.prompt_text = result.prompt_text
+
+
+                    this.status_pending = false
                 }, error: error => {
                     console.log(error)
                     this.req_service.genImages(prompt, this.model.model_id, '1235', num_samples, steps).subscribe({
@@ -123,6 +129,8 @@ export class GenBackgroundComponent implements OnInit{
                                 return {image: image, rating: 0, selected: false, steps: result.steps}
                             })
                             this.prompt_text = result.prompt_text
+
+                            this.status_pending = false
                         }, error: console.log
                     })
                 }

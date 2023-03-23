@@ -1,7 +1,9 @@
-<p>Home</p>
-
-<div class="models">
+<div class="models" style="width: fit-content">
     <p>Select Foods</p>
+    <div *ngIf="!loaded_models">
+        <p>Loading Models</p>
+        <mat-progress-bar color="primary" mode="query"></mat-progress-bar>
+    </div>
     <mat-card class="model" *ngFor="let model of trained_models">
         <div><img class="images" src="{{'data:image/jpg;base64,' + model.thumbnail}}" style="width:100px"/></div>
         <div><button mat-stroked-button  (click)="selectModel(model)">{{model.name}}</button></div>
