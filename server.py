@@ -43,6 +43,7 @@ CORS(app)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-d', '--debug', action='store_true')
+parser.add_argument('-g', '--gpu-host', required=True, action='store')
 args = parser.parse_args()
 print("go")
 
@@ -79,7 +80,7 @@ def map_models(model):
 @app.get('/get-trained-models')
 def gtm():
     # tm = list(map(map_models, Model.objects(trained=True)))
-
+    print('getting trained models')
     return {'models': Model.objects(trained=True).only('name', 'model_id', 'thumbnail')}
 
 
@@ -98,7 +99,7 @@ def gen():
         images = [base64.b64encode(cv2.imencode('.jpg', cv2.imread('./src/assets/cookie.jpg'))[1]).decode() for i in
                   range(num_samples)]
     else:
-        images = json.loads(requests.post('http://localhost:9999/generate-background',
+        images = json.loads(requests.post(args.gpu_host + '/generate-background',
                                           json={'model_id': model_id, 'prompt_text': prompt_text,
                                                 'num_samples': num_samples, 'steps': steps}).content.decode())['images']
     '''
@@ -148,11 +149,11 @@ if __name__ == "__main__":
     print('Debug:', args.debug)
 
     # create and update new models manually
-    # egg = Model(name='Smores Cookie', model_id='cookie', trained=True, thumbnail=base64.b64encode(cv2.imencode('.jpg', cv2.imread('src/assets/cookie.jpg'))[1]).decode())
-    # egg.embeds.put(open('models/cookie.model', 'rb'), content_type='application/octet-stream', filename='cookie.model')
-    # egg.save()
+    #egg = Model(name='Spinach Omelette', model_id='egg', trained=True, thumbnail=base64.b64encode(cv2.imencode('.jpg', cv2.imread('src/assets/egg.jpg'))[1]).decode())
+    #egg.embeds.put(open('models/egg.model', 'rb'), content_type='application/octet-stream', filename='egg.model')
+    #egg.save()
 
-    # egg = Model.objects().first()
-    # egg.update(add_to_set__generated_images=[{'image_id':'egg1', 'image': base64.b64encode(cv2.imencode('.jpg', cv2.imread('src/assets/cookie.jpg'))[1]).decode()}])
+    #egg = Model.objects().first()
+    #egg.update(add_to_set__generated_images=[{'image_id':'egg1', 'image': base64.b64encode(cv2.imencode('.jpg', cv2.imread('src/assets/cookie.jpg'))[1]).decode()}])
 
-    app.run(port=1235 if args.debug else 1234)
+    app.run(port=1235 if args.debug else 80, host='localhost' if args.debug else '192.168.0.20')
