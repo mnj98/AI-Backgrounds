@@ -40,8 +40,8 @@ def image_grid(imgs, rows, cols):
 
 pretrained_model_name_or_path = "CompVis/stable-diffusion-v1-4" #@param {type:"string"}
 
-def load_learned_embed_in_clip(learned_embeds_path, text_encoder, tokenizer, token=None):
-    loaded_learned_embeds = torch.load(learned_embeds_path, map_location="cpu")
+def load_learned_embed_in_clip(model_path, text_encoder, tokenizer, token=None):
+    loaded_learned_embeds = torch.load(model_path, map_location="cpu")
 
     trained_token = list(loaded_learned_embeds.keys())[0]
     embeds = loaded_learned_embeds[trained_token]
@@ -62,17 +62,9 @@ def load_learned_embed_in_clip(learned_embeds_path, text_encoder, tokenizer, tok
     text_encoder.get_input_embeddings().weight.data[token_id] = embeds
 
 
-#TODO: implement for new models ... will not get called with current setup
-def fetch_embeds(model_id):
-    return './models/egg.model'
 
 
-def setup_pipeline(model_id):
-    if (model_id + '.model') not in os.listdir('./models'):
-        learned_embeds_path = fetch_embeds(model_id)
-    else: learned_embeds_path = f'./models/{model_id}.model'
-
-    tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-large-patch14")
+def setup_pipeline(model_file):
     model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14")
 
     config = CLIPTextConfig.from_pretrained("openai/clip-vit-large-patch14")
@@ -93,7 +85,7 @@ def setup_pipeline(model_id):
         pretrained_model_name_or_path, subfolder="text_encoder", torch_dtype=torch.float16
     )
 
-    load_learned_embed_in_clip(learned_embeds_path, text_encoder, tokenizer)
+    load_learned_embed_in_clip(model_file, text_encoder, tokenizer)
 
     pipe = StableDiffusionPipeline.from_pretrained(
         pretrained_model_name_or_path,
@@ -108,32 +100,25 @@ def setup_pipeline(model_id):
 
 
 
-def run_ai(model_id, prompt_text, num_samples=1, steps=100):
+def run_ai(model_file, prompt_text, num_samples=1, steps=100):
     print("AI")
-    pipe = setup_pipeline(model_id)
-
-    #num_samples = shape[0] #@param {type:"number"}
-    #num_rows = shape[1] #@param {type:"number"}
+    pipe = setup_pipeline(model_file)
 
     all_images = []
-    #for _ in range(num_rows):
     images = pipe(prompt_text, num_images_per_prompt=num_samples, num_inference_steps=steps, guidance_scale=9.5).images
     all_images.extend(images)
 
-    #grid = image_grid(all_images, num_samples, num_rows)
-    #grid.save("output.jpg")
     images = list(map(lambda image: cv2.imencode('.jpg', cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))[1], all_images))
     return list(map(lambda image: base64.b64encode(image).decode(), images))
-    #return grid
 
 
 app = Flask(__name__)
 @app.post('/generate-background')
 def gen():
     print(request.json)
-    model_id = request.json['model_id']
     prompt_text = request.json['prompt_text']
     num_samples = request.json['num_samples']
     steps = request.json['steps']
-    return {'images': run_ai(model_id, prompt_text, num_samples=num_samples, steps=steps)}
+    model_file = request.files['model_file']
+    return {'images': run_ai(model_file, prompt_text, num_samples=num_samples, steps=steps)}
 app.run(port=9999)

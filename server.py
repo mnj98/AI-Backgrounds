@@ -26,6 +26,7 @@ class Model(db.Document):
     thumbnail = db.StringField()
     generated_images = db.ListField(db.DictField())
     trained = db.BooleanField(default=False)
+    model_file = db.FileField()
 
     def to_json(self):
         return {'name': self.name,
@@ -33,7 +34,8 @@ class Model(db.Document):
                 'embeds': self.embeds,
                 'thumbnail': self.thumbnail,
                 'generated_images': self.generated_images,
-                'trained': self.trained}
+                'trained': self.trained,
+                'model_file': self.model_file}
 
     def __str__(self):
         return str(self.to_json())
@@ -48,11 +50,6 @@ parser.add_argument('-p', '--port', required=True, action='store', type=int)
 parser.add_argument('-b', '--host', required=True, action='store')
 args = parser.parse_args()
 print("go")
-
-
-# TODO: actually check models
-def supported_model(model_id):
-    return len(Model.objects(model_id=model_id)) > 0
 
 
 @app.route('/', methods=['GET'])
@@ -71,7 +68,6 @@ def map_images(image):
 
 
 def map_models(model):
-    # print(model.thumbnail.read())
     model.thumbnail = base64.b64encode(
         cv2.imencode('.jpg', cv2.cvtColor(np.array(Image.open(io.BytesIO(model.thumbnail.read()))), cv2.COLOR_RGB2BGR))[
             1]).decode()
@@ -81,8 +77,6 @@ def map_models(model):
 
 @app.get('/get-trained-models')
 def gtm():
-    # tm = list(map(map_models, Model.objects(trained=True)))
-    print('getting trained models')
     return {'models': Model.objects(trained=True).only('name', 'model_id', 'thumbnail')}
 
 
@@ -90,27 +84,18 @@ def gtm():
 def gen():
     print('run_ai')
     prompt_text = request.json['prompt_text']
-    model_id = request.json['model']
+    model_id = request.json['model_id']
     num_samples = request.json['num_samples']
     steps = request.json['steps']
-    # model_id = 'test'
-
-    if not supported_model(model_id): return ("Bad model", 404)
 
     if args.debug:
         images = [base64.b64encode(cv2.imencode('.jpg', cv2.imread('./src/assets/cookie.jpg'))[1]).decode() for i in
                   range(num_samples)]
     else:
-        images = json.loads(requests.post(args.gpu_host + '/generate-background',
-                                          json={'model_id': model_id, 'prompt_text': prompt_text,
+        images = json.loads(requests.post(args.gpu_host + '/generate-background', files={'model': Model.objects(model_id=model_id).first()['model_file']},
+                                          json={'prompt_text': prompt_text,
                                                 'num_samples': num_samples, 'steps': steps}).content.decode())['images']
-    '''
-    images = [base64.b64encode(cv2.imencode('.jpg', cv2.imread('./src/assets/cookie.jpg'))[1]).decode()] if args.debug \
-        else json.loads(requests.post('http://localhost:9999/generate-background',
-                                      json={'model_id': model_id, 'prompt_text': prompt_text,
-                                            'num_samples': num_samples, 'steps': steps}).content.decode())['images']
-    '''
-    # print(json.loads(output))
+
 
     return {'prompt_text': prompt_text, 'images': images, 'steps': steps}
 
