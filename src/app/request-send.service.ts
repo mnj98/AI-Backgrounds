@@ -13,8 +13,8 @@ export class RequestSendService {
   constructor(private http: HttpClient) { }
 
 
-    genImages(prompt_text: any, model: any, port: any, num_samples:any, steps:any){
-      return this.http.post<any>(url+ "/generate-background", {prompt_text: prompt_text, model: model, num_samples: num_samples, steps: steps})
+    genImages(prompt_text: any, model_id: any, port: any, num_samples:any, steps:any){
+      return this.http.post<any>(url+ "/generate-background", {prompt_text: prompt_text, model_id: model_id, num_samples: num_samples, steps: steps})
     }
 
     getTrainedModels(port: any){
