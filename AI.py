@@ -1,4 +1,4 @@
-import os, cv2
+import os, cv2, io
 import numpy as np
 import torch, base64
 
@@ -115,10 +115,10 @@ def run_ai(embeds, prompt_text, num_samples=1, steps=100):
 app = Flask(__name__)
 @app.post('/generate-background')
 def gen():
-    print(request.json)
     prompt_text = request.json['prompt_text']
+    print(prompt_text)
     num_samples = request.json['num_samples']
     steps = request.json['steps']
-    embeds = request.files['embeds']
+    embeds = io.BytesIO(base64.b64decode(request.json['embeds']))
     return {'images': run_ai(embeds, prompt_text, num_samples=num_samples, steps=steps)}
 app.run(port=9999)
