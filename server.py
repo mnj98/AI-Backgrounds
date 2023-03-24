@@ -26,7 +26,6 @@ class Model(db.Document):
     thumbnail = db.StringField()
     generated_images = db.ListField(db.DictField())
     trained = db.BooleanField(default=False)
-    model_file = db.FileField()
 
     def to_json(self):
         return {'name': self.name,
@@ -34,8 +33,7 @@ class Model(db.Document):
                 'embeds': self.embeds,
                 'thumbnail': self.thumbnail,
                 'generated_images': self.generated_images,
-                'trained': self.trained,
-                'model_file': self.model_file}
+                'trained': self.trained,}
 
     def __str__(self):
         return str(self.to_json())
@@ -92,7 +90,7 @@ def gen():
         images = [base64.b64encode(cv2.imencode('.jpg', cv2.imread('./src/assets/cookie.jpg'))[1]).decode() for i in
                   range(num_samples)]
     else:
-        images = json.loads(requests.post(args.gpu_host + '/generate-background', files={'model': Model.objects(model_id=model_id).first()['model_file']},
+        images = json.loads(requests.post(args.gpu_host + '/generate-background', files={'model': Model.objects(model_id=model_id).first()['embeds']},
                                           json={'prompt_text': prompt_text,
                                                 'num_samples': num_samples, 'steps': steps}).content.decode())['images']
 

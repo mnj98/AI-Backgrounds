@@ -64,7 +64,7 @@ def load_learned_embed_in_clip(model_path, text_encoder, tokenizer, token=None):
 
 
 
-def setup_pipeline(model_file):
+def setup_pipeline(embeds):
     model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14")
 
     config = CLIPTextConfig.from_pretrained("openai/clip-vit-large-patch14")
@@ -85,7 +85,7 @@ def setup_pipeline(model_file):
         pretrained_model_name_or_path, subfolder="text_encoder", torch_dtype=torch.float16
     )
 
-    load_learned_embed_in_clip(model_file, text_encoder, tokenizer)
+    load_learned_embed_in_clip(embeds, text_encoder, tokenizer)
 
     pipe = StableDiffusionPipeline.from_pretrained(
         pretrained_model_name_or_path,
@@ -100,9 +100,9 @@ def setup_pipeline(model_file):
 
 
 
-def run_ai(model_file, prompt_text, num_samples=1, steps=100):
+def run_ai(embeds, prompt_text, num_samples=1, steps=100):
     print("AI")
-    pipe = setup_pipeline(model_file)
+    pipe = setup_pipeline(embeds)
 
     all_images = []
     images = pipe(prompt_text, num_images_per_prompt=num_samples, num_inference_steps=steps, guidance_scale=9.5).images
@@ -119,6 +119,6 @@ def gen():
     prompt_text = request.json['prompt_text']
     num_samples = request.json['num_samples']
     steps = request.json['steps']
-    model_file = request.files['model_file']
-    return {'images': run_ai(model_file, prompt_text, num_samples=num_samples, steps=steps)}
+    embeds = request.files['embeds']
+    return {'images': run_ai(embeds, prompt_text, num_samples=num_samples, steps=steps)}
 app.run(port=9999)
