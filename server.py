@@ -90,9 +90,10 @@ def gen():
         images = [base64.b64encode(cv2.imencode('.jpg', cv2.imread('./src/assets/cookie.jpg'))[1]).decode() for i in
                   range(num_samples)]
     else:
-        images = json.loads(requests.post(args.gpu_host + '/generate-background', files={'model': Model.objects(model_id=model_id).first()['embeds']},
+        print(type(Model.objects(model_id=model_id).first()['embeds'].read()))
+        images = json.loads(requests.post(args.gpu_host + '/generate-background',
                                           json={'prompt_text': prompt_text,
-                                                'num_samples': num_samples, 'steps': steps}).content.decode())['images']
+                                                'num_samples': num_samples, 'steps': steps, 'embeds': base64.b64encode(Model.objects(model_id=model_id).first()['embeds'].read()).decode('utf-8')}).content.decode())['images']
 
 
     return {'prompt_text': prompt_text, 'images': images, 'steps': steps}
