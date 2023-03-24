@@ -63,14 +63,14 @@ def load_learned_embed_in_clip(learned_embeds_path, text_encoder, tokenizer, tok
 
 
 #TODO: implement for new models ... will not get called with current setup
-def fetch_embeds(model):
+def fetch_embeds(model_id):
     return './models/egg.model'
 
 
-def setup_pipeline(model):
-    if (model + '.model') not in os.listdir('./models'):
-        learned_embeds_path = fetch_embeds(model)
-    else: learned_embeds_path = f'./models/{model}.model'
+def setup_pipeline(model_id):
+    if (model_id + '.model') not in os.listdir('./models'):
+        learned_embeds_path = fetch_embeds(model_id)
+    else: learned_embeds_path = f'./models/{model_id}.model'
 
     tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-large-patch14")
     model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14")
@@ -108,9 +108,9 @@ def setup_pipeline(model):
 
 
 
-def run_ai(model, prompt_text, num_samples=1, steps=100):
+def run_ai(model_id, prompt_text, num_samples=1, steps=100):
     print("AI")
-    pipe = setup_pipeline(model)
+    pipe = setup_pipeline(model_id)
 
     #num_samples = shape[0] #@param {type:"number"}
     #num_rows = shape[1] #@param {type:"number"}
