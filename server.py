@@ -26,6 +26,7 @@ class Model(db.Document):
     thumbnail = db.StringField()
     generated_images = db.ListField(db.DictField())
     trained = db.BooleanField(default=False)
+    token = db.StringField()
 
     def to_json(self):
         return {'name': self.name,
@@ -33,7 +34,8 @@ class Model(db.Document):
                 'embeds': self.embeds,
                 'thumbnail': self.thumbnail,
                 'generated_images': self.generated_images,
-                'trained': self.trained,}
+                'trained': self.trained,
+                'token': self.token}
 
     def __str__(self):
         return str(self.to_json())
@@ -51,13 +53,13 @@ print("go")
 
 
 @app.route('/', methods=['GET'])
+@app.route('/generate', methods=['GET'])
+@app.route('/about-page', methods=['GET'])
 def root():
     return render_template('index.html')
 
 
-@app.route('/generate', methods=['GET'])
-def gen_fallback():
-    return render_template('index.html')
+
 
 
 def map_images(image):
@@ -75,7 +77,7 @@ def map_models(model):
 
 @app.get('/get-trained-models')
 def gtm():
-    return {'models': Model.objects(trained=True).only('name', 'model_id', 'thumbnail')}
+    return {'models': Model.objects(trained=True).only('name', 'model_id', 'thumbnail', 'token')}
 
 
 @app.post('/generate-background')

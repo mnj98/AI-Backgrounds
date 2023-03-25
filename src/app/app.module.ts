@@ -14,13 +14,19 @@ import {FormsModule} from "@angular/forms";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatSliderModule} from "@angular/material/slider";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import { AboutPageComponent } from './about-page/about-page.component';
+import {MatTabsModule} from "@angular/material/tabs";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatInputModule} from "@angular/material/input";
+import {MatSelectModule} from "@angular/material/select";
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    GenBackgroundComponent
+    GenBackgroundComponent,
+    AboutPageComponent
   ],
     imports: [
         BrowserModule,
@@ -33,7 +39,11 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
         FormsModule,
         MatCheckboxModule,
         MatSliderModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        MatTabsModule,
+        BrowserAnimationsModule,
+        MatInputModule,
+        MatSelectModule
     ],
   providers: [],
   bootstrap: [AppComponent]

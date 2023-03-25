@@ -35,6 +35,16 @@ export class GenBackgroundComponent implements OnInit{
         this.getGenedImages(this.model.model_id)
         this.num_samples = defaut_samples
         this.steps = defaut_steps
+        this.prompt_text = this.model.token
+    }
+
+    clear(){
+        this.new_results = null
+        this.prompt_text = ''
+        this.num_samples = defaut_samples
+        this.steps = defaut_steps
+        this.prompt_text = this.model.token
+
     }
 
     deleteImage(model_id, image_id){
@@ -137,13 +147,7 @@ export class GenBackgroundComponent implements OnInit{
             })
         }
     }
-    clear(){
-        this.new_results = null
-        this.prompt_text = ''
-        this.num_samples = defaut_samples
-        this.steps = defaut_steps
 
-    }
 
     showIcon(index:number, image_index:number) {
         if(this.new_results[image_index].rating == null) return 'star_border'
