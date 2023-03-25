@@ -138,16 +138,21 @@ def del_image():
     model.save()
     return {'msg': "deleted :)"}
 
+def create_new_model(name, model_id, token, thumbnail_path, embeds_path, trained=False, thumbnail_size=None):
+    thumbnail = cv2.imread(thumbnail_path)
+    if thumbnail_size:
+        thumbnail = cv2.resize(thumbnail, thumbnail_size)
+    else:
+        thumbnail = cv2.resize(thumbnail, (thumbnail.shape[0] / 4, thumbnail.shape[0] / 4))
+
+
+
+
+    thumbnail = base64.b64encode(cv2.imencode('.jpg', thumbnail)[1]).decode()
+    new_model = Model(name=name, model_id=model_id, trained=trained, token=token, thumbnail=thumbnail)
+    new_model.embeds.put(open(embeds_path, 'rb'), content_type='application/octet-stream', filename=model_id + '.model')
+    new_model.save()
+
 
 if __name__ == "__main__":
-    print('Debug:', args.debug)
-
-    # create and update new models manually
-    #egg = Model(name='Pasta', model_id='pasta', trained=True, token='<pasta-photo>', thumbnail=base64.b64encode(cv2.imencode('.jpg', cv2.resize(cv2.imread('src/assets/pasta.png'), (756,1008)))[1]).decode())
-    #egg.embeds.put(open('models/pasta.model', 'rb'), content_type='application/octet-stream', filename='pasta.model')
-    #egg.save()
-
-    #egg = Model.objects().first()
-    #egg.update(add_to_set__generated_images=[{'image_id':'egg1', 'image': base64.b64encode(cv2.imencode('.jpg', cv2.imread('src/assets/cookie.jpg'))[1]).decode()}])
-
     app.run(port=args.port, host=args.host)
