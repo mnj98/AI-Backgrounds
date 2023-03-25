@@ -58,23 +58,6 @@ print("go")
 def root():
     return render_template('index.html')
 
-
-
-
-
-def map_images(image):
-    return base64.b64encode(
-        cv2.imencode('.jpg', cv2.imdecode(np.frombuffer(image.read(), np.uint8), cv2.IMREAD_COLOR))[1]).decode()
-
-
-def map_models(model):
-    model.thumbnail = base64.b64encode(
-        cv2.imencode('.jpg', cv2.cvtColor(np.array(Image.open(io.BytesIO(model.thumbnail.read()))), cv2.COLOR_RGB2BGR))[
-            1]).decode()
-    model.generated_images = list(map(map_images, model.generated_images))
-    return model
-
-
 @app.get('/get-trained-models')
 def gtm():
     return {'models': Model.objects(trained=True).only('name', 'model_id', 'thumbnail', 'token')}
