@@ -143,8 +143,8 @@ if __name__ == "__main__":
     print('Debug:', args.debug)
 
     # create and update new models manually
-    #egg = Model(name='Spinach Omelette', model_id='egg', trained=True, thumbnail=base64.b64encode(cv2.imencode('.jpg', cv2.imread('src/assets/egg.jpg'))[1]).decode())
-    #egg.embeds.put(open('models/egg.model', 'rb'), content_type='application/octet-stream', filename='egg.model')
+    #egg = Model(name='Pasta', model_id='pasta', trained=True, token='<pasta-photo>', thumbnail=base64.b64encode(cv2.imencode('.jpg', cv2.resize(cv2.imread('src/assets/pasta.png'), (756,1008)))[1]).decode())
+    #egg.embeds.put(open('models/pasta.model', 'rb'), content_type='application/octet-stream', filename='pasta.model')
     #egg.save()
 
     #egg = Model.objects().first()
