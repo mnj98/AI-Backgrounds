@@ -17,21 +17,10 @@ export class HomeComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        this.req_service.getTrainedModels('1234').subscribe({next: models => {
+        this.req_service.getTrainedModels().subscribe({next: models => {
             this.trained_models = models.models
                 this.loaded_models = true
-        }, error: err => {
-            console.log('debug??')
-            this.req_service.getTrainedModels('1235').subscribe({next: models => {
-                this.trained_models = models.models
-                    this.loaded_models = true
-                }, error: err1 => {
-                console.log(err1)
-                }})
-            }})
-
-        //this.simulated_model_database = [{name: 'Spinach Omelette', id: 'egg', original_photo: 'assets/egg.jpg'},
-        //    {name: 'Smores Cookie', id: 'cookie', original_photo: 'assets/cookie.jpg'}]
+        }, error: console.log})
     }
 
     selectModel(model: any): void{

@@ -1,11 +1,7 @@
-from flask import Flask, render_template, request, send_file
-import os, json, cv2, base64, argparse, io, random
+from flask import Flask, render_template, request
+import os, json, cv2, base64, argparse, random, requests
 from flask_cors import CORS
 from flask_mongoengine import MongoEngine
-# from AI import run_ai
-import numpy as np
-from PIL import Image
-import requests
 
 app = Flask(__name__, static_folder=os.getcwd() + '/dist/ai-backgrounds/', static_url_path='')
 
@@ -58,6 +54,7 @@ print("go")
 def root():
     return render_template('index.html')
 
+
 @app.get('/get-trained-models')
 def gtm():
     return {'models': Model.objects(trained=True).only('name', 'model_id', 'thumbnail', 'token')}
@@ -86,7 +83,6 @@ def gen():
                                                 })
                             .content.decode())['images']
 
-
     return {'prompt_text': prompt_text, 'images': images, 'steps': steps}
 
 
@@ -95,7 +91,7 @@ def get_gen_images():
     model_id = request.json['model_id']
     model = Model.objects(model_id=model_id).first()
     sorted_images = sorted(model.generated_images, key=lambda x: x['rating'], reverse=True)
-    return {'output': sorted_images }
+    return {'output': sorted_images}
 
 
 @app.post('/save-images')
@@ -122,15 +118,13 @@ def del_image():
     model.save()
     return {'msg': "deleted :)"}
 
+
 def create_new_model(name, model_id, token, thumbnail_path, embeds_path, trained=False, thumbnail_size=None):
     thumbnail = cv2.imread(thumbnail_path)
     if thumbnail_size:
         thumbnail = cv2.resize(thumbnail, thumbnail_size)
     else:
         thumbnail = cv2.resize(thumbnail, (thumbnail.shape[0] / 4, thumbnail.shape[0] / 4))
-
-
-
 
     thumbnail = base64.b64encode(cv2.imencode('.jpg', thumbnail)[1]).decode()
     new_model = Model(name=name, model_id=model_id, trained=trained, token=token, thumbnail=thumbnail)

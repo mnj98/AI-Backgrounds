@@ -48,53 +48,31 @@ export class GenBackgroundComponent implements OnInit{
     }
 
     deleteImage(model_id, image_id){
-        this.req_service.deleteImage('1234', model_id, image_id).subscribe({next: result => {
+        this.req_service.deleteImage(model_id, image_id).subscribe({next: result => {
                 this.getGenedImages(model_id)
-            }, error: error => {
-                console.log(error)
-                this.req_service.deleteImage('1235', model_id, image_id).subscribe({next: result => {
-                        this.getGenedImages(model_id)
-                    }, error: console.log})
-            }})
+            }, error: console.log})
     }
 
     getGenedImages(model_id){
-        this.req_service.getGeneratedImages('1234', model_id).subscribe({next: result => {
+        this.req_service.getGeneratedImages(model_id).subscribe({next: result => {
                 this.generated_images = result.output
-
-            }, error: error => {
-                console.log(error)
-                this.req_service.getGeneratedImages('1235', model_id).subscribe({next: result => {
-                    console.log(result.output)
-                        this.generated_images = result.output
-                    }, error: console.log})
-            }})
+            }, error: console.log})
     }
 
     saveImages(){
-        let images = this.new_results.filter((image) =>{
-            console.log('filter ' + image)
+        let images = this.new_results.filter((image) => {
             return image.selected
         }).map(image => {
             return {image: image.image, rating: image.rating, steps: image.steps}
         })
-        this.req_service.saveImages('1234', this.model.model_id, images, this.prompt_text).subscribe({next: result => {
+
+
+        this.req_service.saveImages(this.model.model_id, images, this.prompt_text).subscribe({next: result => {
                 this.getGenedImages(this.model.model_id)
                 this.clear()
             }
-            , error: error => {
-                console.log(error)
-                this.req_service.saveImages('1235', this.model.model_id, images, this.prompt_text).subscribe({next: result => {
-                        this.getGenedImages(this.model.model_id)
-                        this.clear()
-                    }, error: console.log})
-            }})
+            , error: console.log})
     }
-
-    /*format_steps_label(steps_value: number): string{
-        console.log(this.steps)
-        return this.steps + ''
-    }*/
 
     onSelectNumSamples(button_index){
         this.num_samples = this.sample_nums[button_index]
@@ -115,35 +93,21 @@ export class GenBackgroundComponent implements OnInit{
     }
 
     clickPrompt(prompt: string, num_samples: number, steps: number){
-        console.log('prompt ' + prompt)
         if(!prompt || prompt.length == 0){
             this.clear()
         }
         else {
             this.status_pending = true
-            console.log(steps)
-            this.req_service.genImages(prompt, this.model.model_id, '1234', num_samples, steps).subscribe({
+
+            this.req_service.genImages(prompt, this.model.model_id, num_samples, steps).subscribe({
                 next: result => {
                     this.new_results = result.images.map((image) => {
                         return {image: image, rating: 0, selected: false, steps: result.steps}
                     })
                     this.prompt_text = result.prompt_text
 
-
                     this.status_pending = false
-                }, error: error => {
-                    console.log(error)
-                    this.req_service.genImages(prompt, this.model.model_id, '1235', num_samples, steps).subscribe({
-                        next: result => {
-                            this.new_results = result.images.map((image) => {
-                                return {image: image, rating: 0, selected: false, steps: result.steps}
-                            })
-                            this.prompt_text = result.prompt_text
-
-                            this.status_pending = false
-                        }, error: console.log
-                    })
-                }
+                }, error: console.log
             })
         }
     }
@@ -163,25 +127,4 @@ export class GenBackgroundComponent implements OnInit{
         if(this.new_results[image_index].rating != null && this.new_results[image_index].rating == rating) this.new_results[image_index].rating = null
         else this.new_results[image_index].rating = rating
     }
-
-
-    /*onFileChanged(event: any){
-        if(event.target.files
-            && event.target.files.length > 0
-            && event.target.files[0].type.includes('image')){
-            let file = new FileReader()
-            file.readAsDataURL(event.target.files[0])
-            file.onload = () => {
-                this.image = {as_file: file.result, original: event.target.files[0]}
-            }
-
-        }
-
-
-    }
-
-    onUpload(){
-        this.req_service.sendReq(this.image).subscribe(console.log)
-
-    }*/
 }
