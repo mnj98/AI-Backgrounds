@@ -94,7 +94,8 @@ def gen():
 def get_gen_images():
     model_id = request.json['model_id']
     model = Model.objects(model_id=model_id).first()
-    return {'output': model.generated_images}
+    sorted_images = sorted(model.generated_images, key=lambda x: x['rating'], reverse=True)
+    return {'output': sorted_images }
 
 
 @app.post('/save-images')
