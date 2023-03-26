@@ -1,13 +1,54 @@
-<div class="models" style="width: fit-content">
+<div class="component-color">
+<mat-card style="width: auto;">
+    <mat-card-header style="align-self: center">
+        <mat-card-title>Select Item</mat-card-title>
+    </mat-card-header>
+    <div *ngIf="!loaded_models">
+        <p>Loading Models</p>
+        <mat-progress-bar color="primary" mode="query"></mat-progress-bar>
+    </div>
+
+    <mat-grid-list cols="3" rowHeight="1:1.2" style="width: 500px">
+        <mat-grid-tile *ngFor="let model of trained_models">
+            <mat-card class="model" >
+                <mat-card-content style="align-self: center">
+                    <img src="{{'data:image/jpg;base64,' + model.thumbnail}}" style="width:80%; height: 80%; align-self: center"/>
+                </mat-card-content>
+                <mat-card-footer>
+                    <button mat-raised-button color="accent"  (click)="selectModel(model)">{{model.name}}</button>
+                </mat-card-footer>
+            </mat-card>
+        </mat-grid-tile>
+    </mat-grid-list>
+
+
+
+</mat-card>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div style="width: 100%; height: 100%">
     <p>Select Item</p>
     <div *ngIf="!loaded_models">
         <p>Loading Models</p>
         <mat-progress-bar color="primary" mode="query"></mat-progress-bar>
     </div>
-    <mat-card class="model" *ngFor="let model of trained_models">
-        <div><img class="images" src="{{'data:image/jpg;base64,' + model.thumbnail}}" style="width:100px"/></div>
-        <div><button mat-stroked-button  (click)="selectModel(model)">{{model.name}}</button></div>
-    </mat-card>
-
-
-</div>
+    <mat-grid-list cols="3" class="mat-grid-list">
+        <mat-grid-tile *ngFor="let model of trained_models" class="mat-grid-tile">
+            <!--<mat-grid-tile-header>{{model.name}}</mat-grid-tile-header>--><!--
+            <img src="{{'data:image/jpg;base64,' + model.thumbnail}}"/>
+            <mat-grid-tile-footer><button mat-stroked-button  (click)="selectModel(model)">{{model.name}}</button></mat-grid-tile-footer>
+        </mat-grid-tile>
+    </mat-grid-list>
+</div>-->

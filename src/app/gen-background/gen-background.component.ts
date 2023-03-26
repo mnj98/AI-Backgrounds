@@ -1,9 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {RequestSendService} from "../request-send.service";
 import {LegacyThemePalette} from "@angular/material/legacy-core";
+import {MatDialog} from "@angular/material/dialog";
+import {PromptDialogComponent} from "../prompt-dialog/prompt-dialog.component";
 
 const defaut_steps: number = 75
 const defaut_samples: number = 1
+
+export interface PromptData {
+    prompt_text:string
+}
 
 
 @Component({
@@ -27,7 +33,8 @@ export class GenBackgroundComponent implements OnInit{
     rating_nums = [1,2,3,4,5]
     sample_nums = [1,2,4]
 
-    constructor(private req_service: RequestSendService) {}
+    constructor(private req_service: RequestSendService,
+                public dialog: MatDialog) {}
 
     ngOnInit(): void {
         //this.rating = null
@@ -110,6 +117,41 @@ export class GenBackgroundComponent implements OnInit{
                 }, error: console.log
             })
         }
+    }
+
+    showPrompt(prompt_text:string){
+        this.dialog.open(PromptDialogComponent, {
+            data: {
+                prompt_text: prompt_text
+            }
+        })
+    }
+
+
+
+    /**
+     * Thanks ChatGPT :)
+     * @param model_name: string
+     * @param image_data: string
+     */
+    downloadImage(model_name, image_data){
+        const byteString = atob(image_data);
+        const mimeString = 'jpg'
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        const blob = new Blob([ab], { type: mimeString });
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = model_name + '.jpg';
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     }
 
 

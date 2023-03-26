@@ -19,6 +19,10 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
+import {MatGridListModule} from "@angular/material/grid-list";
+import { PromptDialogComponent } from './prompt-dialog/prompt-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {ClipboardModule} from "@angular/cdk/clipboard";
 
 
 @NgModule({
@@ -26,7 +30,8 @@ import {MatSelectModule} from "@angular/material/select";
     AppComponent,
     HomeComponent,
     GenBackgroundComponent,
-    AboutPageComponent
+    AboutPageComponent,
+    PromptDialogComponent
   ],
     imports: [
         BrowserModule,
@@ -43,7 +48,10 @@ import {MatSelectModule} from "@angular/material/select";
         MatTabsModule,
         BrowserAnimationsModule,
         MatInputModule,
-        MatSelectModule
+        MatSelectModule,
+        MatGridListModule,
+        MatDialogModule,
+        ClipboardModule
     ],
   providers: [],
   bootstrap: [AppComponent]

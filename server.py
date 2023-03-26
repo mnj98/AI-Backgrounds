@@ -69,7 +69,7 @@ def gen():
     steps = request.json['steps']
 
     if args.debug:
-        images = [base64.b64encode(cv2.imencode('.jpg', cv2.imread('./src/assets/cookie.jpg'))[1]).decode() for i in
+        images = [base64.b64encode(cv2.imencode('.jpg', cv2.resize(cv2.imread('./src/assets/cookie.jpg'), (512, 512)))[1]).decode() for i in
                   range(num_samples)]
     else:
         print(type(Model.objects(model_id=model_id).first()['embeds'].read()))

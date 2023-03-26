@@ -7,9 +7,10 @@
 <img *ngIf="image" class="images" [src]="image.as_file" style="width:500px"/>
 <p *ngIf="!image">No image selected.</p>
 <button (click)="onUpload()">Upload!</button> -->
-<mat-tab-group>
-    <mat-tab label="Generate">
-<mat-card>
+<div class="component-color">
+<mat-tab-group >
+    <mat-tab label="Generate" style="background-color: #cb85ff;">
+<mat-card style="width: 750px; align-self: center">
     <mat-card-header>
         <mat-card-title>{{model.name}}</mat-card-title>
 
@@ -19,15 +20,15 @@
 
     </mat-card-header>
     <mat-card-content>
-    <div>
+    <div style="align-self: center">
 
-        <form>
-            <mat-form-field>
+        <form style="align-self: center">
+            <mat-form-field style="align-self: center">
                 <mat-label>Input New Prompt:</mat-label>
                 <input matInput name="prompt" [(ngModel)]="prompt_text" (keydown.enter)="clickPrompt(prompt_text,num_samples,steps)">
             </mat-form-field>
 
-            <mat-form-field appearance="fill">
+            <mat-form-field appearance="fill" style="align-self: center">
                 <mat-label>Number to generate</mat-label>
                 <mat-select [(ngModel)]="num_samples" name="number_of_samples">
                     <mat-option *ngFor="let s of sample_nums" [value]="s">
@@ -45,11 +46,11 @@
 
 
         </form>
-        <div>
-            <mat-slider min="25" max="150" step="5" discrete showTickMarks>
+        <div >
+            <mat-slider min="25" max="150" step="5" discrete showTickMarks style="display: inline-block">
                 <input matSliderThumb [(ngModel)]="steps">
             </mat-slider>
-            <p>{{steps + ' steps'}}</p>
+            <p style="display: inline-block" matTooltip="The number of inference steps used. See about page.">{{steps + ' steps'}}</p>
         </div>
     <div>
     <button mat-flat-button color="accent" (click)="clickPrompt(prompt_text,num_samples,steps)">Input Prompt</button>
@@ -61,25 +62,30 @@
     </div>
     </div>
 
-        <mat-card *ngIf="new_results && new_results.length > 0" style="max-width: 775px">
+        <mat-card *ngIf="new_results && new_results.length > 0">
             <mat-card-header>
                 <mat-card-title>Generated Images:</mat-card-title>
-            </mat-card-header>
-            <div>
+                <div class="spacer"></div>
                 <button *ngIf="any_selected()" mat-raised-button color="primary" (click)="saveImages()">Save Selected Images</button>
                 <button *ngIf="!any_selected()" mat-raised-button color="primary" disabled>Save Selected Images</button>
-            </div>
+            </mat-card-header>
             <mat-card-content>
-            <mat-card *ngFor="let new_result of new_results; index as i" style="max-width: 350px; display: inline-block">
-                <mat-card-header>
-                    <mat-checkbox (change)="change_generated_image_selection(i)" ></mat-checkbox>
-                </mat-card-header>
-                <div><img  class="images" src="{{'data:image/jpg;base64,' + new_result.image}}" style="width:200px;"/></div>
+                <mat-grid-list cols="2" rowHeight="1:1.5" style="width: 100%; height: 100%">
+                    <mat-grid-tile *ngFor="let new_result of new_results; index as i">
+                        <mat-card  style="max-width: 100%">
+                            <mat-card-header>
+                                <mat-checkbox (change)="change_generated_image_selection(i)" ></mat-checkbox>
+                            </mat-card-header>
+                            <div><img  class="images" src="{{'data:image/jpg;base64,' + new_result.image}}" style="width:100%"/></div>
 
-                <mat-card-actions><button mat-icon-button *ngFor="let ratingId of rating_nums;index as j" [id]="'star_'+j" (click)="onRate(j+1, i)" [matTooltip]="ratingId+''" matTooltipPosition="above">
-                    <mat-icon>{{showIcon(j, i)}}</mat-icon>
-                </button></mat-card-actions>
-            </mat-card>
+                            <mat-card-actions style="align-self: center"><button mat-icon-button *ngFor="let ratingId of rating_nums;index as j" [id]="'star_'+j" (click)="onRate(j+1, i)" [matTooltip]="ratingId+''" matTooltipPosition="above">
+                                <mat-icon>{{showIcon(j, i)}}</mat-icon>
+                            </button></mat-card-actions>
+                        </mat-card>
+                    </mat-grid-tile>
+
+                </mat-grid-list>
+
             </mat-card-content>
 
 
@@ -89,8 +95,34 @@
 </mat-card>
 
     </mat-tab>
-    <mat-tab label="History">
-    <div *ngIf="generated_images && generated_images.length > 0" style="height: fit-content">
+    <mat-tab label="History" style="background-color: #cb85ff;">
+    <div *ngIf="generated_images && generated_images.length > 0" style="width: 750px">
+        <mat-grid-list cols="4" rowHeight="1:1.85" style="width: 100%;">
+            <mat-grid-tile *ngFor="let image of generated_images">
+                <mat-card style="width: 95%; border-color: #673ab7; border-width: 1px; height: 98%">
+                    <mat-card-header>
+                        <mat-card-title>Rating: {{image.rating}}</mat-card-title>
+                        <mat-card-subtitle>Number of Steps: {{image.steps}}</mat-card-subtitle>
+                    </mat-card-header>
+                    <img mat-card-image class="images" src="{{'data:image/jpg;base64,' + image.image}}" style="width: 100%"/>
+                    <!--<mat-card-content>
+                        <p>Prompt: {{image.prompt_text}}</p>
+                    </mat-card-content>-->
+                    <mat-card-actions>
+                        <button style="display: inline-block" mat-mini-fab matTooltip="Download" (click)="downloadImage(model.name, image.image)">
+                            <mat-icon>save_alt</mat-icon>
+                        </button>
+                        <button style="display: inline-block" mat-mini-fab matTooltip="Delete" (click)="deleteImage(model.model_id, image.image_id)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                        <button mat-flat-button style="display: inline-block" color="primary" matTooltip="View Prompt" (click)="showPrompt(image.prompt_text)">Prompt</button>
+                    </mat-card-actions>
+                </mat-card>
+            </mat-grid-tile>
+        </mat-grid-list>
+
+
+        <!--
         <mat-card *ngFor="let image of generated_images" style="max-width: 350px; max-height: 500px; display: inline-block">
             <mat-card-header>
                 <mat-card-title><p style="display: inline-block;">Rating: {{image.rating}}<mat-icon>star</mat-icon></p></mat-card-title>
@@ -108,7 +140,7 @@
                     <mat-icon>delete</mat-icon></button>
                 </mat-card-footer>
             </div>
-        </mat-card>
+        </mat-card>-->
     </div>
     </mat-tab>
 
@@ -120,3 +152,4 @@
 
 
 </mat-tab-group>
+</div>
