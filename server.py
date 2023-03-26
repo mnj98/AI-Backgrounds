@@ -124,7 +124,7 @@ def create_new_model(name, model_id, token, thumbnail_path, embeds_path, trained
     if thumbnail_size:
         thumbnail = cv2.resize(thumbnail, thumbnail_size)
     else:
-        thumbnail = cv2.resize(thumbnail, (thumbnail.shape[0] / 4, thumbnail.shape[0] / 4))
+        thumbnail = cv2.resize(thumbnail, (int(thumbnail.shape[1] / 4), int(thumbnail.shape[0] / 4)))
 
     thumbnail = base64.b64encode(cv2.imencode('.jpg', thumbnail)[1]).decode()
     new_model = Model(name=name, model_id=model_id, trained=trained, token=token, thumbnail=thumbnail)
