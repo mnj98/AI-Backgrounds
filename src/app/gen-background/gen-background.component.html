@@ -20,15 +20,15 @@
 
     </mat-card-header>
     <mat-card-content>
-    <div style="align-self: center">
+    <div style="align-self: center; width: 100%; min-width: 100px; max-width: 745px">
 
-        <form style="align-self: center">
-            <mat-form-field style="align-self: center">
+        <form style="align-self: center; width: 100%; min-width: 100px; max-width: 745px">
+            <mat-form-field style="align-self: center; width: 75%">
                 <mat-label>Input New Prompt:</mat-label>
                 <input matInput name="prompt" [(ngModel)]="prompt_text" (keydown.enter)="clickPrompt(prompt_text,num_samples,steps)">
             </mat-form-field>
 
-            <mat-form-field appearance="fill" style="align-self: center">
+            <mat-form-field appearance="fill" style="align-self: center; width: 25%">
                 <mat-label>Number to generate</mat-label>
                 <mat-select [(ngModel)]="num_samples" name="number_of_samples">
                     <mat-option *ngFor="let s of sample_nums" [value]="s">
@@ -46,13 +46,12 @@
 
 
         </form>
-        <div >
-            <mat-slider min="25" max="150" step="5" discrete showTickMarks style="display: inline-block">
+        <div style="justify-content: center; display: flex">
+            <mat-slider min="25" max="150" step="5" discrete showTickMarks style="display: inline-block; width: 60%">
                 <input matSliderThumb [(ngModel)]="steps">
             </mat-slider>
             <p style="display: inline-block" matTooltip="The number of inference steps used. See about page.">{{steps + ' steps'}}</p>
-        </div>
-    <div>
+    <div style="flex: 1"></div>
     <button mat-flat-button color="accent" (click)="clickPrompt(prompt_text,num_samples,steps)">Input Prompt</button>
     <button mat-flat-button color="warn" (click)="clear()">Clear</button>
         <div *ngIf="status_pending">
