@@ -11,10 +11,10 @@
     <mat-grid-list cols="3" rowHeight="1:1.2" style="width: 500px">
         <mat-grid-tile *ngFor="let model of trained_models">
             <mat-card class="model" >
-                <mat-card-content style="align-self: center">
+                <mat-card-content style="display: flex; justify-content: center">
                     <img src="{{'data:image/jpg;base64,' + model.thumbnail}}" style="width:80%; height: 80%; align-self: center"/>
                 </mat-card-content>
-                <mat-card-footer style="align-self: center">
+                <mat-card-footer style="display: flex; justify-content: center">
                     <button style="align-self: center" mat-raised-button color="accent"  (click)="selectModel(model)">{{model.name}}</button>
                 </mat-card-footer>
             </mat-card>
