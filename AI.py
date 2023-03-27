@@ -9,7 +9,6 @@ from transformers import CLIPTextModel
 
 from transformers import CLIPTokenizer, CLIPModel, CLIPTextConfig
 
-
 pretrained_model_name_or_path = "CompVis/stable-diffusion-v1-4"
 MAX_CONCURRENT_REQS = 2
 
@@ -84,6 +83,7 @@ app = Flask(__name__)
 
 overload_protection = Semaphore(MAX_CONCURRENT_REQS)
 
+
 @app.post('/generate-background')
 def gen():
     try:
@@ -95,15 +95,13 @@ def gen():
             embeds = io.BytesIO(base64.b64decode(request.json['embeds']))
             result = {'images': run_ai(embeds, prompt_text, num_samples=num_samples, steps=steps)}
         else:
-            return jsonify({'error': 'Request timed out'}), 504
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+            result = {'images': []}
+    except:
+        result = {'images': []}
     finally:
         overload_protection.release()
 
     return result
-
-
 
 
 app.run(port=9999)

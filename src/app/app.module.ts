@@ -23,6 +23,8 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import { PromptDialogComponent } from './prompt-dialog/prompt-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {ClipboardModule} from "@angular/cdk/clipboard";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { DeleteConfirmationComponent } from './delete-confirmation/delete-confirmation.component';
 
 
 @NgModule({
@@ -31,7 +33,8 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
     HomeComponent,
     GenBackgroundComponent,
     AboutPageComponent,
-    PromptDialogComponent
+    PromptDialogComponent,
+    DeleteConfirmationComponent
   ],
     imports: [
         BrowserModule,
@@ -51,7 +54,8 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
         MatSelectModule,
         MatGridListModule,
         MatDialogModule,
-        ClipboardModule
+        ClipboardModule,
+        MatSnackBarModule
     ],
   providers: [],
   bootstrap: [AppComponent]

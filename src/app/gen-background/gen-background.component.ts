@@ -3,12 +3,18 @@ import {RequestSendService} from "../request-send.service";
 import {LegacyThemePalette} from "@angular/material/legacy-core";
 import {MatDialog} from "@angular/material/dialog";
 import {PromptDialogComponent} from "../prompt-dialog/prompt-dialog.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {DeleteConfirmationComponent} from "../delete-confirmation/delete-confirmation.component";
 
 const defaut_steps: number = 75
 const defaut_samples: number = 1
 
 export interface PromptData {
     prompt_text:string
+}
+export interface DeleteData {
+    model_id: string,
+    image_id: string
 }
 
 
@@ -34,7 +40,8 @@ export class GenBackgroundComponent implements OnInit{
     sample_nums = [1,2,4]
 
     constructor(private req_service: RequestSendService,
-                public dialog: MatDialog) {}
+                public dialog: MatDialog,
+                private _snackBar: MatSnackBar) {}
 
     ngOnInit(): void {
         //this.rating = null
@@ -51,13 +58,16 @@ export class GenBackgroundComponent implements OnInit{
         this.num_samples = defaut_samples
         this.steps = defaut_steps
         this.prompt_text = this.model.token
+        this.status_pending = false
 
     }
 
     deleteImage(model_id, image_id){
-        this.req_service.deleteImage(model_id, image_id).subscribe({next: result => {
-                this.getGenedImages(model_id)
-            }, error: console.log})
+        this.dialog.open(DeleteConfirmationComponent, {
+            data: {model_id: model_id, image_id: image_id}
+        }).afterClosed().subscribe({next: () => {
+            this.getGenedImages(model_id)
+        }})
     }
 
     getGenedImages(model_id){
@@ -105,18 +115,25 @@ export class GenBackgroundComponent implements OnInit{
         }
         else {
             this.status_pending = true
-            setTimeout(() => {
-                this.req_service.genImages(prompt, this.model.model_id, num_samples, steps).subscribe({
-                    next: result => {
+            this.req_service.genImages(prompt, this.model.model_id, num_samples, steps).subscribe({
+                next: result => {
+                    if(result.images.length == 0){
+                        this._snackBar.open("Request Timed Out", 'ok',{horizontalPosition: "center", verticalPosition: 'bottom'})
+                        this.new_results = null
+                        this.status_pending = false
+
+                    }
+                    else{
                         this.new_results = result.images.map((image) => {
                             return {image: image, rating: 0, selected: false, steps: result.steps}
                         })
                         this.prompt_text = result.prompt_text
 
                         this.status_pending = false
-                    }, error: console.log
-                })
-            }, 1000)
+                    }
+                }, error: console.log
+            })
+
 
 
         }
