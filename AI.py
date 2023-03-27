@@ -87,7 +87,7 @@ overload_protection = Semaphore(MAX_CONCURRENT_REQS)
 @app.post('/generate-background')
 def gen():
     try:
-        if overload_protection.acquire(timeout=120):
+        if overload_protection.acquire(timeout=300):
             prompt_text = request.json['prompt_text']
             print(prompt_text)
             num_samples = request.json['num_samples']
