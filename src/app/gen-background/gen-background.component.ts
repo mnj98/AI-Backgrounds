@@ -105,17 +105,20 @@ export class GenBackgroundComponent implements OnInit{
         }
         else {
             this.status_pending = true
+            setTimeout(() => {
+                this.req_service.genImages(prompt, this.model.model_id, num_samples, steps).subscribe({
+                    next: result => {
+                        this.new_results = result.images.map((image) => {
+                            return {image: image, rating: 0, selected: false, steps: result.steps}
+                        })
+                        this.prompt_text = result.prompt_text
 
-            this.req_service.genImages(prompt, this.model.model_id, num_samples, steps).subscribe({
-                next: result => {
-                    this.new_results = result.images.map((image) => {
-                        return {image: image, rating: 0, selected: false, steps: result.steps}
-                    })
-                    this.prompt_text = result.prompt_text
+                        this.status_pending = false
+                    }, error: console.log
+                })
+            }, 1000)
 
-                    this.status_pending = false
-                }, error: console.log
-            })
+
         }
     }
 

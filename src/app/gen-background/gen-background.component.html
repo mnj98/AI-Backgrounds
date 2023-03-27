@@ -31,7 +31,7 @@
             <mat-form-field appearance="fill" style="align-self: center; width: 25%">
                 <mat-label>Number to generate</mat-label>
                 <mat-select [(ngModel)]="num_samples" name="number_of_samples">
-                    <mat-option *ngFor="let s of sample_nums" [value]="s">
+                    <mat-option *ngFor="let s of sample_nums" [value]="s" [disabled]="s != 1">
                         {{s}}
                     </mat-option>
 
@@ -54,11 +54,11 @@
     <div style="flex: 1"></div>
     <button mat-flat-button color="accent" (click)="clickPrompt(prompt_text,num_samples,steps)">Input Prompt</button>
     <button mat-flat-button color="warn" (click)="clear()">Clear</button>
-        <div *ngIf="status_pending">
-            <p>Awaiting Response</p>
+
+    </div>
+        <div *ngIf="status_pending" style="justify-content: center; display: flex">
             <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
         </div>
-    </div>
     </div>
 
         <mat-card *ngIf="new_results && new_results.length > 0">
