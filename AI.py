@@ -1,7 +1,8 @@
 import cv2, io, torch, base64
+from threading import Semaphore
 import numpy as np
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 from diffusers import StableDiffusionPipeline
 from transformers import CLIPTextModel
@@ -10,6 +11,7 @@ from transformers import CLIPTokenizer, CLIPModel, CLIPTextConfig
 
 
 pretrained_model_name_or_path = "CompVis/stable-diffusion-v1-4"
+MAX_CONCURRENT_REQS = 2
 
 
 def load_learned_embed_in_clip(model_path, text_encoder, tokenizer, token=None):
@@ -80,15 +82,28 @@ def run_ai(embeds, prompt_text, num_samples=1, steps=100):
 
 app = Flask(__name__)
 
+overload_protection = Semaphore(MAX_CONCURRENT_REQS)
 
 @app.post('/generate-background')
 def gen():
-    prompt_text = request.json['prompt_text']
-    print(prompt_text)
-    num_samples = request.json['num_samples']
-    steps = request.json['steps']
-    embeds = io.BytesIO(base64.b64decode(request.json['embeds']))
-    return {'images': run_ai(embeds, prompt_text, num_samples=num_samples, steps=steps)}
+    try:
+        if overload_protection.acquire(timeout=120):
+            prompt_text = request.json['prompt_text']
+            print(prompt_text)
+            num_samples = request.json['num_samples']
+            steps = request.json['steps']
+            embeds = io.BytesIO(base64.b64decode(request.json['embeds']))
+            result = {'images': run_ai(embeds, prompt_text, num_samples=num_samples, steps=steps)}
+        else:
+            return jsonify({'error': 'Request timed out'}), 504
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        overload_protection.release()
+
+    return result
+
+
 
 
 app.run(port=9999)
