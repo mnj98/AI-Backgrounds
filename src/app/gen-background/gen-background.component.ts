@@ -5,6 +5,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {PromptDialogComponent} from "../prompt-dialog/prompt-dialog.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {DeleteConfirmationComponent} from "../delete-confirmation/delete-confirmation.component";
+import {MatTabChangeEvent} from "@angular/material/tabs";
 
 const defaut_steps: number = 75
 const defaut_samples: number = 1
@@ -68,6 +69,10 @@ export class GenBackgroundComponent implements OnInit{
         }).afterClosed().subscribe({next: () => {
             this.getGenedImages(model_id)
         }})
+    }
+
+    tabChangeToHistory(event: MatTabChangeEvent, model_id){
+        if(event.index == 1) this.getGenedImages(model_id)
     }
 
     getGenedImages(model_id){

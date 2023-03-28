@@ -8,7 +8,7 @@
 <p *ngIf="!image">No image selected.</p>
 <button (click)="onUpload()">Upload!</button> -->
 <div class="component-color">
-<mat-tab-group >
+<mat-tab-group (selectedTabChange)="tabChangeToHistory($event, model.model_id)">
     <mat-tab label="Generate" style="background-color: #cb85ff;">
 <mat-card style="width: 750px; align-self: center">
     <mat-card-header>
