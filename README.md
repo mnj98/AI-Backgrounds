@@ -7,7 +7,9 @@ In this work we seek to support small business owners and independent sellers wh
 ## Implementation
 The implementation is broken into two main parts: front-end and back-end. The front end is implemented
 in Angular, a TypeScript framework for building web-apps. The code for the Angular components can be
-found in `src/app/...`. The back-end is a Flask server, written in Python, that serves the web-app and
+found in `src/app/...`. The important files there would probably be `gen-background.component.ts` /
+`.html` and `home.component.ts` / `.html`. This is where the main logic for the front end is happening.
+The back-end is a Flask server, written in Python, that serves the web-app and
  handles AI functionality. See `server.py` for the server code. Because of networking limitations,
 the server with the GPU, which is required for training and inference, is a separate machine from 
 the one that serves the web-app. This GPU machine also runs a Flask server which is connected using 
