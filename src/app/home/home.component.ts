@@ -2,6 +2,14 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {RequestSendService} from "../request-send.service";
 
+export interface Model{
+    model_id: string,
+    name: string,
+    thumbnail: string,
+    token: string
+}
+
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -9,15 +17,15 @@ import {RequestSendService} from "../request-send.service";
 })
 export class HomeComponent implements OnInit{
 
-    trained_models
-    loaded_models = false
+    trained_models: [Model] = [{model_id: "", name: "", thumbnail: "", token: ""}]
+    loaded_models: boolean = false
 
     constructor(private router: Router,
                 private req_service: RequestSendService) {
     }
 
     ngOnInit(): void {
-        this.req_service.getTrainedModels().subscribe({next: models => {
+        this.req_service.getTrainedModels().subscribe({next: (models) => {
             this.trained_models = models.models
                 this.loaded_models = true
         }, error: console.log})

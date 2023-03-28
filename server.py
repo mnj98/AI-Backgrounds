@@ -83,7 +83,7 @@ def gen():
                                                 })
                             .content.decode())['images']
 
-    return {'prompt_text': prompt_text, 'images': images, 'steps': steps}
+    return {'prompt_text': prompt_text, 'images': images, 'steps': steps, 'timeout': len(images) == 0}
 
 
 @app.post('/get-generated-images')

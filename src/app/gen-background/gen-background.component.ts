@@ -6,6 +6,7 @@ import {PromptDialogComponent} from "../prompt-dialog/prompt-dialog.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {DeleteConfirmationComponent} from "../delete-confirmation/delete-confirmation.component";
 import {MatTabChangeEvent} from "@angular/material/tabs";
+import {Model} from "../home/home.component";
 
 const defaut_steps: number = 75
 const defaut_samples: number = 1
@@ -18,6 +19,21 @@ export interface DeleteData {
     image_id: string
 }
 
+export interface SavedImage{
+    image_id: string,
+    image: string,
+    prompt_text: string,
+    rating: number,
+    steps: number
+}
+
+export interface GeneratedImage{
+    image: string,
+    rating: number,
+    selected: boolean,
+    steps: number
+}
+
 
 @Component({
   selector: 'app-gen-background',
@@ -26,35 +42,34 @@ export interface DeleteData {
 })
 
 export class GenBackgroundComponent implements OnInit{
-    model
-    prompt_text
-    generated_images
-    new_results
-    color = 'accent'
-    //rating
-    num_samples
-    steps
-    status_pending = false
+    model: Model = {model_id: "", name: "", thumbnail: "", token: ""}
+    prompt_text: string = ""
+    generated_images: SavedImage[] = [] //[{image_id: "", image: "", prompt_text: "", rating: 0, steps: 0}]
+    before_init: boolean = true
+    new_results: GeneratedImage[] = [] //[{image: "", rating: 0, selected: false, steps: 0}]
+    num_samples: number = defaut_samples
+    steps: number = defaut_steps
+    status_pending: boolean = false
 
 
-    rating_nums = [1,2,3,4,5]
-    sample_nums = [1,2,4]
+    rating_nums: number[] = [1,2,3,4,5]
+    sample_nums: number[] = [1,2,4]
 
     constructor(private req_service: RequestSendService,
                 public dialog: MatDialog,
                 private _snackBar: MatSnackBar) {}
 
     ngOnInit(): void {
-        //this.rating = null
-        this.model = window.history.state.model ?? {name: 'Spinach Omelette', id: 'egg', original_photo: 'src/assets/egg.jpg'}
+        this.model = window.history.state.model
         this.getGenedImages(this.model.model_id)
         this.num_samples = defaut_samples
         this.steps = defaut_steps
         this.prompt_text = this.model.token
+        this.before_init = false
     }
 
     clear(){
-        this.new_results = null
+        this.new_results = []
         this.prompt_text = ''
         this.num_samples = defaut_samples
         this.steps = defaut_steps
@@ -122,13 +137,13 @@ export class GenBackgroundComponent implements OnInit{
             this.status_pending = true
             this.req_service.genImages(prompt, this.model.model_id, num_samples, steps).subscribe({
                 next: result => {
-                    if(result.images.length == 0){
+                    if(result.timeout){
                         this._snackBar.open("Request Timed Out", 'ok',{horizontalPosition: "center", verticalPosition: 'bottom'})
-                        this.new_results = null
+                        this.new_results = []
                         this.status_pending = false
 
                     }
-                    else{
+                    else {
                         this.new_results = result.images.map((image) => {
                             return {image: image, rating: 0, selected: false, steps: result.steps}
                         })
@@ -191,7 +206,7 @@ export class GenBackgroundComponent implements OnInit{
 
     onRate(rating:number, image_index:number){
         console.log(rating)
-        if(this.new_results[image_index].rating != null && this.new_results[image_index].rating == rating) this.new_results[image_index].rating = null
+        if(this.new_results[image_index].rating != 0 && this.new_results[image_index].rating == rating) this.new_results[image_index].rating = 0
         else this.new_results[image_index].rating = rating
     }
 }

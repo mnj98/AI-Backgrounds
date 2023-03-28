@@ -39,12 +39,6 @@
             </mat-form-field>
 
 
-        <!--<div *ngFor="let num of sample_nums;index as i" style="display: inline-block">
-        <button mat-flat-button color="primary" *ngIf="count_button_highlight(i)" (click)="onSelectNumSamples(i)">{{sample_nums[i]}} Samples</button>
-        <button mat-stroked-button color="primary" *ngIf="!count_button_highlight(i)" (click)="onSelectNumSamples(i)">{{sample_nums[i]}} Samples</button></div>-->
-
-
-
         </form>
         <div style="justify-content: center; display: flex">
             <mat-slider min="25" max="150" step="5" discrete showTickMarks style="display: inline-block; width: 60%">
@@ -95,7 +89,7 @@
 
     </mat-tab>
     <mat-tab label="History" style="background-color: #cb85ff;">
-    <div *ngIf="generated_images && generated_images.length > 0" style="width: 750px">
+    <div *ngIf="generated_images && generated_images.length > 0 && !before_init" style="width: 750px">
         <mat-grid-list cols="4" rowHeight="1:1.85" style="width: 100%;">
             <mat-grid-tile *ngFor="let image of generated_images">
                 <mat-card style="width: 95%; border-color: #673ab7; border-width: 1px; height: 98%">
@@ -119,36 +113,8 @@
                 </mat-card>
             </mat-grid-tile>
         </mat-grid-list>
-
-
-        <!--
-        <mat-card *ngFor="let image of generated_images" style="max-width: 350px; max-height: 500px; display: inline-block">
-            <mat-card-header>
-                <mat-card-title><p style="display: inline-block;">Rating: {{image.rating}}<mat-icon>star</mat-icon></p></mat-card-title>
-                <mat-card-subtitle>Number of Steps: {{image.steps}}</mat-card-subtitle>
-                <img mat-card-avatar class="images" src="{{'data:image/jpg;base64,' + model.thumbnail}}" style="width: 40px"/>
-            </mat-card-header>
-            <img mat-card-image class="images" src="{{'data:image/jpg;base64,' + image.image}}" style="width: 200px"/>
-            <mat-card-content>
-                <p>Prompt: {{image.prompt_text}}</p>
-
-            </mat-card-content>
-            <div>
-                <mat-card-footer style="display: inline-block">
-                    <button style="display: inline-block" mat-icon-button (click)="deleteImage(model.model_id, image.image_id)">
-                    <mat-icon>delete</mat-icon></button>
-                </mat-card-footer>
-            </div>
-        </mat-card>-->
     </div>
     </mat-tab>
-
-
-
-
-
-
-
 
 </mat-tab-group>
 </div>
