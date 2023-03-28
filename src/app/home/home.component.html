@@ -2,8 +2,10 @@
 <mat-card style="width: auto;">
     <mat-card-header style="align-self: center">
         <mat-card-title>Select Item</mat-card-title>
+        <mat-card-subtitle *ngIf="!loaded_models">Loading Models</mat-card-subtitle>
+        <mat-progress-bar color="primary" mode="query" *ngIf="!loaded_models"></mat-progress-bar>
     </mat-card-header>
-    <div *ngIf="!loaded_models">
+    <div *ngIf="!loaded_models && false">
         <p>Loading Models</p>
         <mat-progress-bar color="primary" mode="query"></mat-progress-bar>
     </div>
