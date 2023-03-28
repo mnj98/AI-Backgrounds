@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import os, json, cv2, base64, argparse, random, requests
+from threading import Semaphore
 from flask_cors import CORS
 from flask_mongoengine import MongoEngine
 
@@ -59,29 +60,39 @@ def root():
 def gtm():
     return {'models': Model.objects(trained=True).only('name', 'model_id', 'thumbnail', 'token')}
 
+op = Semaphore(2)
 
 @app.post('/generate-background')
 def gen():
-    print('run_ai')
-    prompt_text = request.json['prompt_text']
-    model_id = request.json['model_id']
-    num_samples = request.json['num_samples']
-    steps = request.json['steps']
+    try:
+        if op.acquire(timeout=300):
 
-    if args.debug:
-        images = [base64.b64encode(cv2.imencode('.jpg', cv2.resize(cv2.imread('./src/assets/cookie.jpg'), (512, 512)))[1]).decode() for i in
-                  range(num_samples)]
-    else:
-        print(type(Model.objects(model_id=model_id).first()['embeds'].read()))
-        images = json.loads(requests.post(args.gpu_host + '/generate-background',
-                                          json={'prompt_text': prompt_text,
-                                                'num_samples': num_samples,
-                                                'steps': steps,
-                                                'embeds':
-                                                    base64.b64encode(Model.objects(model_id=model_id).first()['embeds']
-                                                                     .read()).decode('utf-8')
-                                                })
-                            .content.decode())['images']
+            print('run_ai')
+            prompt_text = request.json['prompt_text']
+            model_id = request.json['model_id']
+            num_samples = request.json['num_samples']
+            steps = request.json['steps']
+
+            if args.debug:
+                images = [base64.b64encode(cv2.imencode('.jpg', cv2.resize(cv2.imread('./src/assets/cookie.jpg'), (512, 512)))[1]).decode() for i in
+                          range(num_samples)]
+            else:
+                print(type(Model.objects(model_id=model_id).first()['embeds'].read()))
+                images = json.loads(requests.post(args.gpu_host + '/generate-background',
+                                                  json={'prompt_text': prompt_text,
+                                                        'num_samples': num_samples,
+                                                        'steps': steps,
+                                                        'embeds':
+                                                            base64.b64encode(Model.objects(model_id=model_id).first()['embeds']
+                                                                             .read()).decode('utf-8')
+                                                        })
+                                    .content.decode())['images']
+        else: images = []
+    except Exception as e:
+        print("exception:", e)
+        images = []
+    finally:
+        op.release()
 
     return {'prompt_text': prompt_text, 'images': images, 'steps': steps, 'timeout': len(images) == 0}
 
