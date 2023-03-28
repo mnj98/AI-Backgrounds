@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-import os, json, cv2, base64, argparse, random, requests
+import os, json, cv2, base64, argparse, random, requests, time
 from threading import Semaphore
 from flask_cors import CORS
 from flask_mongoengine import MongoEngine
@@ -92,6 +92,7 @@ def gen():
         print("exception:", e)
         images = []
     finally:
+        time.sleep(3)
         op.release()
 
     return {'prompt_text': prompt_text, 'images': images, 'steps': steps, 'timeout': len(images) == 0}

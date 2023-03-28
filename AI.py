@@ -73,7 +73,7 @@ def run_ai(embeds, prompt_text, num_samples=1, steps=100):
     all_images = []
     images = pipe(prompt_text, num_images_per_prompt=num_samples, num_inference_steps=steps, guidance_scale=9.5).images
     all_images.extend(images)
-
+    del pipe
     images = list(
         map(lambda image: cv2.imencode('.jpg', cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))[1], all_images))
     return list(map(lambda image: base64.b64encode(image).decode(), images))
