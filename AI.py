@@ -76,6 +76,7 @@ def run_ai(embeds, prompt_text, num_samples=1, steps=100):
     del pipe
     images = list(
         map(lambda image: cv2.imencode('.jpg', cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))[1], all_images))
+    print(images)
     return list(map(lambda image: base64.b64encode(image).decode(), images))
 
 
@@ -96,7 +97,8 @@ def gen():
             result = {'images': run_ai(embeds, prompt_text, num_samples=num_samples, steps=steps)}
         else:
             result = {'images': []}
-    except:
+    except Exception as e:
+        print("ERROR:", e)
         result = {'images': []}
     finally:
         overload_protection.release()
