@@ -1,6 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 downloaded_embedding/
 # Compiled output
+ngrok_token.txt
 __pycache__/
 /dist
 models/
