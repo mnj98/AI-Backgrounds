@@ -10,14 +10,27 @@ import {Model} from "../home/home.component";
 const DEFAULT_STEPS: number = 75
 const DEFAULT_SAMPLES: number = 1
 
+//The following types are used to enforce some structure to the inter-component API
+//Normal JavaScript does not allow for this, but we're using TypeScript
+
+/**
+ * Data transferred to prompt dialog component
+ */
 export interface PromptData {
-    prompt_text:string
+    prompt_text: string
 }
+
+/**
+ * Data transferred to delete dialoge component
+ */
 export interface DeleteData {
     model_id: string,
     image_id: string
 }
 
+/**
+ * Type that represents a saved image
+ */
 export interface SavedImage{
     image_id: string,
     image: string,
@@ -26,6 +39,9 @@ export interface SavedImage{
     steps: number
 }
 
+/**
+ * Type that represents a generated image
+ */
 export interface GeneratedImage{
     image: string,
     rating: number,
