@@ -62,8 +62,8 @@ export class GenBackgroundComponent implements OnInit{
     ngOnInit(): void {
         this.model = window.history.state.model
         this.getGenedImages(this.model.model_id)
-        this.num_samples = defaut_samples
-        this.steps = defaut_steps
+        this.num_samples = DEFAULT_SAMPLES
+        this.steps = DEFAULT_STEPS
         this.prompt_text = this.model.token
         this.before_init = false
     }
@@ -71,8 +71,8 @@ export class GenBackgroundComponent implements OnInit{
     clear(){
         this.new_results = []
         this.prompt_text = ''
-        this.num_samples = defaut_samples
-        this.steps = defaut_steps
+        this.num_samples = DEFAULT_SAMPLES
+        this.steps = DEFAULT_STEPS
         this.prompt_text = this.model.token
         this.status_pending = false
 
