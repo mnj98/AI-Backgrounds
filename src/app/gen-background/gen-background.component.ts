@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {RequestSendService} from "../request-send.service";
-import {LegacyThemePalette} from "@angular/material/legacy-core";
 import {MatDialog} from "@angular/material/dialog";
 import {PromptDialogComponent} from "../prompt-dialog/prompt-dialog.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
