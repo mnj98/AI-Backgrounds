@@ -6,7 +6,8 @@ In this work we seek to support small business owners and independent sellers wh
 
 ## Implementation
 The implementation is broken into two main parts: front-end and back-end. The front end is implemented
-in Angular, a TypeScript framework for building web-apps. 
+in Angular, a TypeScript framework for building web-apps. Please review the following sections and code
+comments for more details.
 
 ### Angular 
 The code for the Angular components can be
