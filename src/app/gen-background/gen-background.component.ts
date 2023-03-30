@@ -8,8 +8,8 @@ import {DeleteConfirmationComponent} from "../delete-confirmation/delete-confirm
 import {MatTabChangeEvent} from "@angular/material/tabs";
 import {Model} from "../home/home.component";
 
-const defaut_steps: number = 75
-const defaut_samples: number = 1
+const DEFAULT_STEPS: number = 75
+const DEFAULT_SAMPLES: number = 1
 
 export interface PromptData {
     prompt_text:string
@@ -47,8 +47,8 @@ export class GenBackgroundComponent implements OnInit{
     generated_images: SavedImage[] = [] //[{image_id: "", image: "", prompt_text: "", rating: 0, steps: 0}]
     before_init: boolean = true
     new_results: GeneratedImage[] = [] //[{image: "", rating: 0, selected: false, steps: 0}]
-    num_samples: number = defaut_samples
-    steps: number = defaut_steps
+    num_samples: number = DEFAULT_SAMPLES
+    steps: number = DEFAULT_STEPS
     status_pending: boolean = false
 
 
