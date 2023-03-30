@@ -56,12 +56,15 @@ export interface GeneratedImage{
   styleUrls: ['./gen-background.component.css']
 })
 
+
 export class GenBackgroundComponent implements OnInit{
+
+    //Fields for this component
     model: Model = {model_id: "", name: "", thumbnail: "", token: ""}
     prompt_text: string = ""
-    generated_images: SavedImage[] = [] //[{image_id: "", image: "", prompt_text: "", rating: 0, steps: 0}]
+    generated_images: SavedImage[] = []
     before_init: boolean = true
-    new_results: GeneratedImage[] = [] //[{image: "", rating: 0, selected: false, steps: 0}]
+    new_results: GeneratedImage[] = []
     num_samples: number = DEFAULT_SAMPLES
     steps: number = DEFAULT_STEPS
     status_pending: boolean = false
@@ -74,6 +77,9 @@ export class GenBackgroundComponent implements OnInit{
                 public dialog: MatDialog,
                 private _snackBar: MatSnackBar) {}
 
+    /**
+     * Runs on init, sets some initial values and gets generated images from backend database
+     */
     ngOnInit(): void {
         this.model = window.history.state.model
         this.getGenedImages(this.model.model_id)
@@ -83,6 +89,9 @@ export class GenBackgroundComponent implements OnInit{
         this.before_init = false
     }
 
+    /**
+     * Run in a few places to clear the inputs
+     */
     clear(){
         this.new_results = []
         this.prompt_text = ''
@@ -93,6 +102,11 @@ export class GenBackgroundComponent implements OnInit{
 
     }
 
+    /**
+     * Opens the delete dialoge component to get confirmation before deleting the selected image
+     * @param model_id
+     * @param image_id
+     */
     deleteImage(model_id, image_id){
         this.dialog.open(DeleteConfirmationComponent, {
             data: {model_id: model_id, image_id: image_id}
@@ -101,24 +115,37 @@ export class GenBackgroundComponent implements OnInit{
         }})
     }
 
+    /**
+     * Reloads generated images from back-end when the tab is changed.
+     * @param event
+     * @param model_id
+     */
     tabChangeToHistory(event: MatTabChangeEvent, model_id){
         if(event.index == 1) this.getGenedImages(model_id)
     }
 
+    /**
+     * Gets generated images from back-end
+     * @param model_id
+     */
     getGenedImages(model_id){
         this.req_service.getGeneratedImages(model_id).subscribe({next: result => {
                 this.generated_images = result.output
             }, error: console.log})
     }
 
+    /**
+     * Saves all images that have been selected
+     */
     saveImages(){
+        //This filters out non-selected images. Then it maps to a slimmed-down object that only has required fields.
         let images = this.new_results.filter((image) => {
             return image.selected
         }).map(image => {
             return {image: image.image, rating: image.rating, steps: image.steps}
         })
 
-
+        //Use api to save. After reload and clear.
         this.req_service.saveImages(this.model.model_id, images, this.prompt_text).subscribe({next: result => {
                 this.getGenedImages(this.model.model_id)
                 this.clear()
@@ -126,38 +153,54 @@ export class GenBackgroundComponent implements OnInit{
             , error: console.log})
     }
 
+    /**
+     * Updates samples
+     * @param button_index
+     */
     onSelectNumSamples(button_index){
         this.num_samples = this.sample_nums[button_index]
     }
 
-    count_button_highlight(button_index){
-        return this.num_samples == this.sample_nums[button_index]
-    }
-
+    /**
+     * Used to disable save button when nothing is selected
+     */
     any_selected(){
         return this.new_results.some(image => image.selected)
     }
 
+    /**
+     * Used to select or un-select a generated image
+     * @param image_index
+     */
     change_generated_image_selection(image_index:number){
-        console.log(image_index)
-        console.log(this.new_results)
         this.new_results[image_index].selected = !this.new_results[image_index].selected
     }
 
+    /**
+     * Submits a request
+     * @param prompt
+     * @param num_samples
+     * @param steps
+     */
     clickPrompt(prompt: string, num_samples: number, steps: number){
+        //Edge case handling, probably not needed?
         if(!prompt || prompt.length == 0){
             this.clear()
         }
         else {
+            //init loading bar with pending status
             this.status_pending = true
+            //Send generate image request to back-end
             this.req_service.genImages(prompt, this.model.model_id, num_samples, steps).subscribe({
                 next: result => {
+                    //Display timeout info
                     if(result.timeout){
                         this._snackBar.open("Request Timed Out", 'ok',{horizontalPosition: "center", verticalPosition: 'bottom'})
                         this.new_results = []
                         this.status_pending = false
 
                     }
+                    //Set new results so they get displayed
                     else {
                         this.new_results = result.images.map((image) => {
                             return {image: image, rating: 0, selected: false, steps: result.steps}
@@ -174,6 +217,10 @@ export class GenBackgroundComponent implements OnInit{
         }
     }
 
+    /**
+     * Open prompt dialog component
+     * @param prompt_text
+     */
     showPrompt(prompt_text:string){
         this.dialog.open(PromptDialogComponent, {
             data: {
@@ -209,7 +256,11 @@ export class GenBackgroundComponent implements OnInit{
         URL.revokeObjectURL(url);
     }
 
-
+    /**
+     * Shows the correct star for the specific rating
+     * @param index
+     * @param image_index
+     */
     showIcon(index:number, image_index:number) {
         if(this.new_results[image_index].rating == null) return 'star_border'
         if (this.new_results[image_index].rating >= index + 1) {
@@ -219,8 +270,12 @@ export class GenBackgroundComponent implements OnInit{
         }
     }
 
+    /**
+     * Updates rating
+     * @param rating
+     * @param image_index
+     */
     onRate(rating:number, image_index:number){
-        console.log(rating)
         if(this.new_results[image_index].rating != 0 && this.new_results[image_index].rating == rating) this.new_results[image_index].rating = 0
         else this.new_results[image_index].rating = rating
     }
