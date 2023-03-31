@@ -86,8 +86,8 @@ def run_ai(embeds, prompt_text, num_samples=1, steps=100):
 
 app = Flask(__name__)
 
-# Semaphore used to limit concurrent requests to 2
-overload_protection = Semaphore(MAX_CONCURRENT_REQS)
+# Semaphore used to limit concurrent requests to 1
+overload_protection = Semaphore(1)
 
 # Flask handler for generate requests
 @app.post('/generate-background')
