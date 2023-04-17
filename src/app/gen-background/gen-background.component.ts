@@ -42,11 +42,18 @@ export interface SavedImage{
 /**
  * Type that represents a generated image
  */
-export interface GeneratedImage{
+export interface NewImage{
     image: string,
     rating: number,
     selected: boolean,
     steps: number
+}
+
+export interface GeneratedImages{
+    prompt_text: string,
+    images: [string],
+    steps: number,
+    timeout: boolean
 }
 
 
@@ -64,7 +71,7 @@ export class GenBackgroundComponent implements OnInit{
     prompt_text: string = ""
     saved_images: SavedImage[] = []
     before_init: boolean = true
-    new_results: GeneratedImage[] = []
+    new_results: NewImage[] = []
     num_samples: number = DEFAULT_SAMPLES
     steps: number = DEFAULT_STEPS
     status_pending: boolean = false
