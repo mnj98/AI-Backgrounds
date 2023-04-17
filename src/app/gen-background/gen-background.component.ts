@@ -21,7 +21,7 @@ export interface PromptData {
 }
 
 /**
- * Data transferred to delete dialoge component
+ * Data transferred to delete dialog component
  */
 export interface DeleteData {
     model_id: string,
@@ -62,7 +62,7 @@ export class GenBackgroundComponent implements OnInit{
     //Fields for this component
     model: Model = {model_id: "", name: "", thumbnail: "", token: ""}
     prompt_text: string = ""
-    generated_images: SavedImage[] = []
+    saved_images: SavedImage[] = []
     before_init: boolean = true
     new_results: GeneratedImage[] = []
     num_samples: number = DEFAULT_SAMPLES
@@ -82,7 +82,7 @@ export class GenBackgroundComponent implements OnInit{
      */
     ngOnInit(): void {
         this.model = window.history.state.model
-        this.getGenedImages(this.model.model_id)
+        this.getSavedImages(this.model.model_id)
         this.num_samples = DEFAULT_SAMPLES
         this.steps = DEFAULT_STEPS
         this.prompt_text = this.model.token
@@ -103,7 +103,7 @@ export class GenBackgroundComponent implements OnInit{
     }
 
     /**
-     * Opens the delete dialoge component to get confirmation before deleting the selected image
+     * Opens the delete dialog component to get confirmation before deleting the selected image
      * @param model_id
      * @param image_id
      */
@@ -111,7 +111,7 @@ export class GenBackgroundComponent implements OnInit{
         this.dialog.open(DeleteConfirmationComponent, {
             data: {model_id: model_id, image_id: image_id}
         }).afterClosed().subscribe({next: () => {
-            this.getGenedImages(model_id)
+            this.getSavedImages(model_id)
         }})
     }
 
@@ -121,16 +121,16 @@ export class GenBackgroundComponent implements OnInit{
      * @param model_id
      */
     tabChangeToHistory(event: MatTabChangeEvent, model_id){
-        if(event.index == 1) this.getGenedImages(model_id)
+        if(event.index == 1) this.getSavedImages(model_id)
     }
 
     /**
      * Gets generated images from back-end
      * @param model_id
      */
-    getGenedImages(model_id){
+    getSavedImages(model_id){
         this.req_service.getGeneratedImages(model_id).subscribe({next: result => {
-                this.generated_images = result.output
+                this.saved_images = result.output
             }, error: console.log})
     }
 
@@ -147,7 +147,7 @@ export class GenBackgroundComponent implements OnInit{
 
         //Use api to save. After reload and clear.
         this.req_service.saveImages(this.model.model_id, images, this.prompt_text).subscribe({next: () => {
-            this.getGenedImages(this.model.model_id)
+            this.getSavedImages(this.model.model_id)
             this.clear()
         }, error: console.log})
     }
