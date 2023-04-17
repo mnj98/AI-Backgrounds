@@ -89,9 +89,9 @@
 
     </mat-tab>
     <mat-tab label="History" style="background-color: #cb85ff;">
-    <div *ngIf="generated_images && generated_images.length > 0 && !before_init" style="width: 750px">
+    <div *ngIf="saved_images && saved_images.length > 0 && !before_init" style="width: 750px">
         <mat-grid-list cols="4" rowHeight="1:1.85" style="width: 100%;">
-            <mat-grid-tile *ngFor="let image of generated_images">
+            <mat-grid-tile *ngFor="let image of saved_images">
                 <mat-card style="width: 95%; border-color: #673ab7; border-width: 1px; height: 98%">
                     <mat-card-header>
                         <mat-card-title>Rating: {{image.rating}}</mat-card-title>
