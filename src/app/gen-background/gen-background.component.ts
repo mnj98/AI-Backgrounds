@@ -146,11 +146,10 @@ export class GenBackgroundComponent implements OnInit{
         })
 
         //Use api to save. After reload and clear.
-        this.req_service.saveImages(this.model.model_id, images, this.prompt_text).subscribe({next: result => {
-                this.getGenedImages(this.model.model_id)
-                this.clear()
-            }
-            , error: console.log})
+        this.req_service.saveImages(this.model.model_id, images, this.prompt_text).subscribe({next: () => {
+            this.getGenedImages(this.model.model_id)
+            this.clear()
+        }, error: console.log})
     }
 
     /**

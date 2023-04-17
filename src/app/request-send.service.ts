@@ -30,10 +30,14 @@ export class RequestSendService {
     }
 
     saveImages(model_id:any, images:any, prompt_text: any){
-      return this.http.post<any>(url+ "/save-images", {model_id: model_id, images: images, prompt_text: prompt_text})
+      return this.http.post<void>(url+ "/save-images", {model_id: model_id, images: images, prompt_text: prompt_text})
     }
 
     deleteImage(model_id:any, image_id:any){
-      return this.http.post<any>(url + "/delete-image", {model_id: model_id, image_id: image_id})
+      return this.http.post<void>(url + "/delete-image", {model_id: model_id, image_id: image_id})
+    }
+
+    debug_fallback(){
+
     }
 }

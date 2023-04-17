@@ -21,7 +21,7 @@ export class DeleteConfirmationComponent {
      * @param image_id
      */
     deleteImage(model_id, image_id){
-        this.req_service.deleteImage(model_id, image_id).subscribe({next: result => {
+        this.req_service.deleteImage(model_id, image_id).subscribe({next: () => {
                 console.log('image ' + image_id + ' deleted')
             }, error: console.log})
     }
