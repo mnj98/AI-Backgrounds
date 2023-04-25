@@ -49,20 +49,22 @@
     <button mat-flat-button color="accent" (click)="clickPrompt(prompt_text,num_samples,steps)">Input Prompt</button>
     <button mat-flat-button color="warn" (click)="clear()">Clear</button>
 
+    
     </div>
-        <div *ngIf="status_pending" style="justify-content: center; display: flex">
+        <div *ngIf="status_pending" style="justify-content: center; display: flex; padding: 60px;">
             <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
         </div>
     </div>
 
         <mat-card *ngIf="new_results && new_results.length > 0">
             <mat-card-header>
-                <mat-card-title>Generated Images:</mat-card-title>
+                <mat-card-title><h3>Generated Images</h3></mat-card-title>
+
                 <div class="spacer"></div>
-                <button *ngIf="any_selected()" mat-raised-button color="primary" (click)="saveImages()">Save Selected Images</button>
-                <button *ngIf="!any_selected()" mat-raised-button color="primary" disabled>Save Selected Images</button>
+               <!--- <button *ngIf="any_selected()" mat-button color="primary" (click)="saveImages()">Save Selected Images</button>
+                <button *ngIf="!any_selected()" mat-button color="primary" disabled>Save Selected Images</button> -->
             </mat-card-header>
-            <mat-card-content>
+            <mat-card-content style="text-align:center">
                 <mat-grid-list cols="2" rowHeight="1:1.5" style="width: 100%; height: 100%">
                     <mat-grid-tile *ngFor="let new_result of new_results; index as i">
                         <mat-card  style="max-width: 100%">
@@ -79,16 +81,21 @@
 
                 </mat-grid-list>
 
+
+            <button *ngIf="any_selected()" mat-raised-button style="background-color: grey; color:white" (click)="saveImages()">Save Selected Images</button>
+            <button *ngIf="!any_selected()" mat-raised-button style="background-color: grey; color:white;" disabled>Save Selected Images</button>
+
             </mat-card-content>
 
 
+            
         </mat-card>
     </mat-card-content>
 
 </mat-card>
 
     </mat-tab>
-    <mat-tab label="History" style="background-color: #cb85ff;">
+    <mat-tab label="History" style="background-color: #e9e9e9">
     <div *ngIf="saved_images && saved_images.length > 0 && !before_init" style="width: 750px">
         <mat-grid-list cols="4" rowHeight="1:1.85" style="width: 100%;">
             <mat-grid-tile *ngFor="let image of saved_images">
