@@ -1,3 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
 body { margin: 0; font-family: Roboto, sans-serif; background-color: #f7d0ff}
+=======
+/* You can add global styles to this file, and also import other style files 
+@import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css"; */
+body { margin: 0; font-family: Roboto, sans-serif; background-color: #ffffff}
+
+.mdc-linear-progress__bar-inner {
+    border-color: #1e79d2 !important;
+}
+
+
+.mdc-slider__track--active_fill {
+    border-color: #1e79d2 !important;
+  }
+
+
+.mat-mdc-slider .mdc-slider__thumb-knob {
+    background-color: #1e79d2 !important;
+    border-color: #1e79d2 !important;
+}
+
+.mdc-slider__track--inactive {
+    border-color: #1e79d2 !important;
+  }
+
+
+  .mat-mdc-slider .mdc-slider__track--inactive {
+    background-color: #1e79d2 !important;
+    opacity: .24;
+  }
+
+  .mat-mdc-card {
+    border-color: gray !important;
+  }
