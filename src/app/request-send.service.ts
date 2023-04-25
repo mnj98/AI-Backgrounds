@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../environments/environment";
-import {Model} from "./home/home.component";
-import {GeneratedImages, SavedImage} from "./gen-background/gen-background.component";
+import {Model} from "./components/components.component";
+
+import {GeneratedImages, SavedImage} from "./components/basicelements/basicelements.component"
 import {Observable} from "rxjs";
+
 import {thumbnail, saved_image_data} from "./thumbnail";
 
 
@@ -100,6 +102,7 @@ export class RequestSendService {
     }
 
     getTrainedModels(){
+      console.log('get models')
       return this.debug_fallback<{models: [Model]}>(RequestType.get, "/get-trained-models", {})
       //return this.http.get<{models: [Model]}>(url + "/get-trained-models")
     }
@@ -123,11 +126,13 @@ export class RequestSendService {
       return new Observable<T>(observer => {
           if (fun == RequestType.get) {
             this.http.get<T>(url + path).subscribe({next: (value) => observer.next(value), error: () => {
+                console.log("test")
                 return observer.next(default_responses[path])
             }})
           }
           else if(fun == RequestType.post){
               this.http.post<T>(url + path, body).subscribe({next: (value) => observer.next(value), error: () => {
+                      console.log("test")
                   observer.next(default_responses[path])}
               })
           }
