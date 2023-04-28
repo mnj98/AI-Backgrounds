@@ -26,6 +26,7 @@ class Model(db.Document):
     generated_images = db.ListField(db.DictField())
     trained = db.BooleanField(default=False)
     token = db.StringField()
+    version = db.StringField()
 
     def to_json(self):
         return {'name': self.name,
@@ -62,7 +63,7 @@ def root():
 # Get models from database
 @app.get('/get-trained-models')
 def gtm():
-    return {'models': Model.objects(trained=True).only('name', 'model_id', 'thumbnail', 'token')}
+    return {'models': Model.objects(trained=True, version='v2').only('name', 'model_id', 'thumbnail', 'token')}
 
 
 # Semaphore used to limit concurrent requests
@@ -142,7 +143,7 @@ def del_image():
     return {'msg': "deleted :)"}
 
 # This function can be called from the below main block to manually add new models to the database
-def create_new_model(name, model_id, token, thumbnail_path, embeds_path, trained=False, thumbnail_size=None):
+def create_new_model(name, model_id, token, thumbnail_path, embeds_path, trained=False, thumbnail_size=None, version='v2'):
     thumbnail = cv2.imread(thumbnail_path)
 
     # We make sure to keep thumbnail size small
@@ -153,7 +154,7 @@ def create_new_model(name, model_id, token, thumbnail_path, embeds_path, trained
         thumbnail = cv2.resize(thumbnail, (int(thumbnail.shape[1] / 4), int(thumbnail.shape[0] / 4)))
 
     thumbnail = base64.b64encode(cv2.imencode('.jpg', thumbnail)[1]).decode()
-    new_model = Model(name=name, model_id=model_id, trained=trained, token=token, thumbnail=thumbnail)
+    new_model = Model(name=name, model_id=model_id, trained=trained, token=token, thumbnail=thumbnail, version=version)
     new_model.embeds.put(open(embeds_path, 'rb'), content_type='application/octet-stream', filename=model_id + '.model')
     new_model.save()
 
