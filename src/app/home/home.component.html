@@ -1,8 +1,8 @@
 <div class="component-color">
     <mat-card style="width: 500px;">
         <mat-card-header style="align-self: center; width: 100%; justify-content: center">
-            <mat-card-title style="align-self: center">Select Item</mat-card-title>
-            <mat-card-subtitle *ngIf="!loaded_models" style="align-self: center">Loading Models</mat-card-subtitle>
+            <mat-card-title *ngIf="loaded_models" style="align-self: center; font-weight: bold;  padding: 40px;"><h3>Select Item</h3></mat-card-title>
+            <mat-card-subtitle *ngIf="!loaded_models" style="align-self: center; font-weight: bold; padding: 40px;"><h3>Loading Models</h3></mat-card-subtitle>
 
         </mat-card-header>
         <mat-progress-bar *ngIf="!loaded_models" style="align-self: center" color="primary" mode="query"></mat-progress-bar>
@@ -18,7 +18,7 @@
                         <img src="{{'data:image/jpg;base64,' + model.thumbnail}}" style="width:80%; height: 80%; align-self: center"/>
                     </mat-card-content>
                     <mat-card-footer style="display: flex; justify-content: center">
-                        <button style="align-self: center" mat-raised-button color="accent"  (click)="selectModel(model)">{{model.name}}</button>
+                        <button style="align-self: center; background-color: #e9e9e9; margin-top: 10px; margin-bottom: 25px;" mat-raised-button color="accent"  (click)="selectModel(model)">{{model.name}}</button>
                     </mat-card-footer>
                 </mat-card>
             </mat-grid-tile>
