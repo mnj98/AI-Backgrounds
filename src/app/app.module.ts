@@ -19,6 +19,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {HttpClientModule} from "@angular/common/http";
+import {AboutPageComponent} from "./about-page/about-page.component";
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import {HttpClientModule} from "@angular/common/http";
     NavbarComponent,
     FooterComponent,
     PromptDialogComponent,
-    DeleteConfirmationComponent
+    DeleteConfirmationComponent,
+    AboutPageComponent
   ],
   imports: [
     BrowserModule,

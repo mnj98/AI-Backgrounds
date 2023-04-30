@@ -5,11 +5,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ComponentsComponent } from './components/components.component';
 import {BasicelementsComponent} from "./components/basicelements/basicelements.component";
+import {AboutPageComponent} from "./about-page/about-page.component";
 
 const routes: Routes =[
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home',             component: ComponentsComponent },
     { path: 'generate',     component: BasicelementsComponent },
+    { path: 'about-page', component: AboutPageComponent }
 ];
 
 @NgModule({
