@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {RequestSendService} from "../request-send.service";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {DeleteData} from "../gen-background/gen-background.component";
+import {DeleteData} from "../components/basicelements/basicelements.component";
 
 
 @Component({
