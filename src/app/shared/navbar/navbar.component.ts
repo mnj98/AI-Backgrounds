@@ -1,5 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import {AboutPageComponent} from "../../about-page/about-page.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: 'app-navbar',
@@ -10,8 +12,13 @@ export class NavbarComponent implements OnInit {
     private toggleButton: any;
     private sidebarVisible: boolean;
 
-    constructor(public location: Location, private element : ElementRef) {
+    constructor(public location: Location, private element : ElementRef,
+                private modalService: NgbModal) {
         this.sidebarVisible = false;
+    }
+
+    openAbout(){
+        this.modalService.open(AboutPageComponent)
     }
 
     ngOnInit() {

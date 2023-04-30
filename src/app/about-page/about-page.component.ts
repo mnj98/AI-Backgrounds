@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-about-page',
@@ -7,4 +8,6 @@ import { Component } from '@angular/core';
 })
 export class AboutPageComponent {
 
+    constructor(public activeModal: NgbActiveModal) {
+    }
 }

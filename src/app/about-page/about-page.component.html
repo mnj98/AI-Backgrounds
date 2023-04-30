@@ -1,15 +1,32 @@
-<div class="component-color">
 
-<p>For this work we were inspired by our experiences buying and selling items on online marketplaces. We found that sometimes it can be hard for a prospective purchaser to recognize the quality of an item when the seller does not take more care in framing the item as desirable through imagery or detailed descriptions. At the same time, we recognize that sellers do not always have the resources to produce the heavily staged sets to showcase their products to consumers in the same way established companies do. To this end, we have set out to develop a tool which allows sellers to better advertise their products through AI-based image generation. We limit our scope to image generation of backgrounds for food items as a pilot of our core idea.</p>
+<div class="modal-header">
+    <h5 class="modal-title text-center">About</h5>
+    <!--<button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>-->
+</div>
 
-<p>We present a tool which allows users to submit a series of images of a food item they would like to modify the background of. These images are then used to train a stable diffusion AI model such that the model can recognize the totality of the food item in the foreground of the image and later adjust it during the inference phase according to textual prompts from the user. Once the model is trained on the image, users can type a statement in the textbox of the tool webpage describing how they would like to modify the image. Prompts should include the images token. For example:</p>
+<div class="modal-body">
+    <!--<p>For this work we were inspired by our experiences buying and selling items on online marketplaces. We found that sometimes it can be hard for a prospective purchaser to recognize the quality of an item when the seller does not take more care in framing the item as desirable through imagery or detailed descriptions. At the same time, we recognize that sellers do not always have the resources to produce the heavily staged sets to showcase their products to consumers in the same way established companies do. To this end, we have set out to develop a tool which allows sellers to better advertise their products through AI-based image generation. We limit our scope to image generation of backgrounds for food items as a pilot of our core idea.</p>
+    -->
+    <p>We present a tool which allows users to submit a series of images of a food item they would like to modify the character of. Using AI, users can type a statement in the textbox describing how they would like to modify the image. Prompts should include the images token. For example:</p>
 
-<p>&#60;egg-photo&#62; on a table with a plaid tablecloth</p>
+    <code>&#60;tomato-photo&#62; as a comic superhero</code><p></p>
 
-<p>&#60;pasta-photo&#62; next to a glass of white wine and a basket of bread rolls</p>
+    <code>&#60;banana-photo&#62; as a lightning bolt</code>
 
-<p>You may generate multiple images in one request using the drop down menu. You may also edit the number of steps the AI performs to generate your backgrounds which may lead to higher quality. Increasing either option will increase the amount of time it takes to generate your backgrounds.</p>
+    <p>You may generate multiple images in one request using the drop down menu. You may also edit the number of steps the AI performs to generate your backgrounds which may lead to higher quality. Increasing either option will increase the amount of time it takes to generate your backgrounds.</p>
 
-<p>Feel free to rate and save generated backgrounds. They will be stored in the History tab.</p>
+    <p>Feel free to rate and save generated backgrounds. They will be stored in the History tab.</p>
 
 </div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default btn-link" (click)="activeModal.close('Close click')">Ok</button>
+</div>
+
+
+
+
+
+
