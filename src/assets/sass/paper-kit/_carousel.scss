@@ -14,7 +14,7 @@
 }
 .carousel-control-prev-icon{
     background-image: none !important;
-    margin-top: -5px;
+    margin-top: 5px;
     &:before{
         color: $white-color;
         font-size: 26px;
@@ -26,7 +26,7 @@
 }
 .carousel-control-next-icon{
     background-image: none !important;
-    margin-top: -5px;
+    margin-top: 5px;
     &:before{
         color: $white-color;
         font-size: 26px;

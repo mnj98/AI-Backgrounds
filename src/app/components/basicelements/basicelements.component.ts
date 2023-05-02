@@ -78,6 +78,11 @@ export class BasicelementsComponent implements OnInit {
     rating_nums: number[] = [1,2,3,4,5]
     sample_nums: number[] = [1,2,4]
 
+    generate_error: boolean = false
+
+    error_notification: object = {type: "danger", message: 'Error or timeout, please try again',
+        icon: 'nc-bell-55'}
+
     constructor(private req_service: RequestSendService,
                 public dialog: MatDialog,
                 private _snackBar: MatSnackBar) {}
@@ -181,6 +186,10 @@ export class BasicelementsComponent implements OnInit {
         this.new_results[image_index].selected = !this.new_results[image_index].selected
     }
 
+    closeAlert(){
+        this.generate_error = false
+    }
+
     /**
      * Submits a request
      * @param prompt
@@ -200,7 +209,9 @@ export class BasicelementsComponent implements OnInit {
                 next: result => {
                     //Display timeout info
                     if(result.timeout){
-                        this._snackBar.open("Request Timed Out", 'ok',{horizontalPosition: "center", verticalPosition: 'bottom'})
+                        console.log('error')
+                        this.generate_error = true
+                        //this._snackBar.open("Request Timed Out", 'ok',{horizontalPosition: "center", verticalPosition: 'bottom'})
                         this.new_results = []
                         this.status_pending = false
 
