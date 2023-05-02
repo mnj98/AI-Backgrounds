@@ -19,6 +19,8 @@ The generate tab contains the logic for generating, rating, and saving images, a
 viewing past images (loaded from database). The API that connects front-end to back-end is found in
 `src/app/request-send.service.ts`. 
 
+Some elements are implemented using this template: https://github.com/creativetimofficial/paper-kit-2-angular
+
 ### Flask
 The back-end is a Flask server, written in Python, that serves the web-app and
  handles AI functionality. See `server.py` for the server code. The server connects with a MongoDB
